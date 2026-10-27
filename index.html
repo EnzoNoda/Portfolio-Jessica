@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jessica Deart — Designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========== BARRA DE NAVEGAÇÃO (fica sempre por cima) ========== -->
+  <header class="topo">
+    <a href="#" class="logo" data-pagina="inicio" aria-label="Jessica Deart — início">
+      <img src="imagens/logo-jessica.webp" alt="Jessica Deart">
+    </a>
+
+    <nav class="menu" aria-label="Principal">
+      <a href="#" class="menu-link ativo" data-pagina="inicio" data-i18n="inicio">Início</a>
+      <a href="#" class="menu-link" data-pagina="sobre" data-i18n="sobre">Sobre</a>
+      <a href="#" class="menu-link" data-pagina="projetos" data-i18n="projetos">Projetos</a>
+      <a href="#" class="menu-link" data-pagina="curriculo" data-i18n="curriculo">Currículo</a>
+      <a href="#" class="menu-link" data-pagina="redes" data-i18n="redes">Redes Sociais</a>
+      <a href="#" class="btn-contato" data-pagina="contato">
+        <span data-i18n="faleComigo">Fale comigo</span>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </nav>
+
+    <div class="acoes">
+      <button class="icone" id="btn-idioma" aria-label="Mudar idioma para inglês" title="English">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h8M8 3v2M10.5 5c-.6 3-2.6 5.6-5.5 7M6 8c1 1.7 2.6 3.1 4.5 4"/><path d="M12.5 20l3.5-8 3.5 8M13.6 17.5h4.8"/></g></svg>
+        <span class="icone-sigla" id="sigla-idioma">EN</span>
+      </button>
+      <button class="icone" id="btn-tema" aria-label="Ativar modo escuro" title="Modo escuro">
+        <svg class="lua" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <svg class="sol" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></svg>
+      </button>
+      <button class="icone btn-menu" id="btn-menu" aria-label="Abrir menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14M5 16h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========== PÁGINA INICIAL ========== -->
+  <main class="inicio">
+    <section class="hero">
+      <div class="hero-texto">
+        <p class="ola">
+          <span data-i18n="ola">Olá, eu sou a Jessica</span>
+          <svg class="sorriso" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 13.5c1.8 2.2 5.2 2.2 7 0"/></g><circle cx="9.3" cy="9.8" r="1.1" fill="currentColor"/><circle cx="14.7" cy="9.8" r="1.1" fill="currentColor"/></svg>
+        </p>
+
+        <h1 class="titulo-gif">
+          <img src="imagens/designer.webp" alt="Designer gráfica, editorial, de identidade visual, de interface e de produto">
+        </h1>
+
+        <p class="frase" data-i18n-html="frase">
+          Transformo <em>sonhos</em> em <span class="circulada">soluções<svg viewBox="0 0 120 44" preserveAspectRatio="none" aria-hidden="true"><path d="M8 26C6 12 40 4 70 5s46 9 44 19-30 16-60 15S5 34 12 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span> visuais criativas, acessíveis, funcionais e estratégicas!
+        </p>
+      </div>
+
+      <div class="hero-foto">
+        <img src="imagens/foto.webp" alt="Foto da Jessica de beca e capelo, sobre uma estrela de bolinhas roxas">
+      </div>
+    </section>
+
+    <ul class="logos" aria-label="Marcas com que trabalhei" data-i18n-aria="marcas">
+      <li><img src="imagens/logo-ziguezague.png" alt="Ziguezague" style="--h:.9"></li>
+      <li><img src="imagens/logo-carimba.png" alt="Carimba — Empresa Júnior de Design" style="--h:1"></li>
+      <li><img src="imagens/logo-noda.png" alt="Noda" style="--h:.8"></li>
+      <li><img src="imagens/logo-montanha.png" alt="Logo de montanhas" style="--h:.95"></li>
+      <li><img src="imagens/logo-viseu.png" alt="Viseu" style="--h:1.25"></li>
+    </ul>
+  </main>
+
+  <!-- ========== MENU MOBILE ========== -->
+  <div class="menu-mobile" id="menu-mobile" inert>
+    <nav aria-label="Menu">
+      <a href="#" data-pagina="inicio" data-i18n="inicio">Início</a>
+      <a href="#" data-pagina="sobre" data-i18n="sobre">Sobre</a>
+      <a href="#" data-pagina="projetos" data-i18n="projetos">Projetos</a>
+      <a href="#" data-pagina="curriculo" data-i18n="curriculo">Currículo</a>
+      <a href="#" data-pagina="redes" data-i18n="redes">Redes Sociais</a>
+      <a href="#" data-pagina="contato" data-i18n="faleComigo">Fale comigo</a>
+    </nav>
+  </div>
+
+  <!-- ========== PÁGINAS (abrem com o círculo) ========== -->
+
+  <section class="pagina" id="pagina-sobre" aria-labelledby="t-sobre" inert>
+    <div class="pagina-miolo">
+      <h2 class="pagina-titulo" id="t-sobre" tabindex="-1"><span data-i18n="tSobre1">Sobre</span> <em data-i18n="tSobre2">mim</em></h2>
+      <div class="pagina-conteudo texto">
+        <p class="lead" data-i18n="sobreLead">Escreva aqui um parágrafo de abertura sobre você: quem é, o que faz e para quem.</p>
+        <p data-i18n="sobreTexto">Um segundo parágrafo com mais detalhes: como trabalha, o que inspira você e que tipo de projeto gosta de pegar.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pagina" id="pagina-projetos" aria-labelledby="t-projetos" inert>
+    <div class="pagina-miolo">
+      <h2 class="pagina-titulo" id="t-projetos" tabindex="-1"><span data-i18n="tProj1">Projetos</span> <em data-i18n="tProj2">selecionados</em></h2>
+      <div class="pagina-conteudo">
+        <div class="grade-projetos">
+          <article class="projeto"><div class="projeto-img"></div><h3>Ziguezague</h3><p data-i18n="catIdentidade">Identidade visual</p></article>
+          <article class="projeto"><div class="projeto-img"></div><h3>Carimba</h3><p data-i18n="catEditorial">Editorial</p></article>
+          <article class="projeto"><div class="projeto-img"></div><h3>Noda</h3><p data-i18n="catIdentidade">Identidade visual</p></article>
+          <article class="projeto"><div class="projeto-img"></div><h3>Viseu</h3><p data-i18n="catProduto">Design de produto</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pagina" id="pagina-curriculo" aria-labelledby="t-curriculo" inert>
+    <div class="pagina-miolo">
+      <h2 class="pagina-titulo" id="t-curriculo" tabindex="-1"><span data-i18n="tCurr1">Currículo</span> <em data-i18n="tCurr2">trajetória</em></h2>
+      <div class="pagina-conteudo texto">
+        <h3 data-i18n="experiencia">Experiência</h3>
+        <dl class="linha-tempo">
+          <div><dt>2023 – <span data-i18n="hoje">hoje</span></dt><dd><strong data-i18n="cargo">Cargo</strong> · <span data-i18n="empresa">Empresa</span></dd></div>
+          <div><dt>2020 – 2023</dt><dd><strong data-i18n="cargo">Cargo</strong> · Carimba</dd></div>
+        </dl>
+        <h3 data-i18n="formacao">Formação</h3>
+        <dl class="linha-tempo">
+          <div><dt>2019 – 2024</dt><dd><strong data-i18n="curso">Curso</strong> · <span data-i18n="instituicao">Instituição</span></dd></div>
+        </dl>
+        <h3 data-i18n="ferramentas">Ferramentas</h3>
+        <ul class="tags"><li>Figma</li><li>Photoshop</li><li>Illustrator</li><li>InDesign</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="pagina" id="pagina-redes" aria-labelledby="t-redes" inert>
+    <div class="pagina-miolo">
+      <h2 class="pagina-titulo" id="t-redes" tabindex="-1"><span data-i18n="tRedes1">Redes</span> <em data-i18n="tRedes2">sociais</em></h2>
+      <div class="pagina-conteudo">
+        <ul class="lista-grande">
+          <li><a href="#" target="_blank" rel="noopener">Instagram <small>@usuario</small></a></li>
+          <li><a href="#" target="_blank" rel="noopener">Behance <small>behance.net/usuario</small></a></li>
+          <li><a href="#" target="_blank" rel="noopener">LinkedIn <small>linkedin.com/in/usuario</small></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="pagina" id="pagina-contato" aria-labelledby="t-contato" inert>
+    <div class="pagina-miolo">
+      <h2 class="pagina-titulo" id="t-contato" tabindex="-1"><span data-i18n="tCont1">Fale</span> <em data-i18n="tCont2">comigo</em></h2>
+      <div class="pagina-conteudo texto">
+        <p class="lead" data-i18n="contatoLead">Tem um projeto em mente? Me mande uma mensagem.</p>
+        <a class="contato-grande" href="mailto:email@exemplo.com">email@exemplo.com</a>
+        <p class="contato-extra">WhatsApp: <a href="#">(00) 00000-0000</a></p>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
