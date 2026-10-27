@@ -53,7 +53,6 @@ img { display: block; max-width: 100%; }
 }
 
 /* Com uma página aberta, o topo inverte as cores para ler sobre ela */
-body.em-pagina .topo { color: var(--fundo); }
 
 .logo img {
   height: 30px;
@@ -62,9 +61,7 @@ body.em-pagina .topo { color: var(--fundo); }
 }
 
 /* o logo animado é azul-marinho: clareia quando o fundo atrás é escuro */
-body.escuro .logo img,
-body.em-pagina:not(.escuro) .logo img { filter: brightness(0) invert(.95); }
-body.escuro.em-pagina .logo img { filter: none; }
+body.escuro .logo img { filter: brightness(0) invert(.95); }
 
 .menu {
   display: flex;
@@ -97,7 +94,6 @@ body.escuro.em-pagina .logo img { filter: none; }
 
 .menu-link.ativo { color: var(--destaque); }
 .menu-link.ativo::after { transform: scaleX(1); }
-body.em-pagina:not(.escuro) .menu-link.ativo { color: #b9a6ff; }
 
 .btn-contato {
   display: inline-flex;
@@ -113,8 +109,6 @@ body.em-pagina:not(.escuro) .menu-link.ativo { color: #b9a6ff; }
 .btn-contato:hover { background: currentColor; }
 .btn-contato:hover span,
 .btn-contato:hover svg { color: var(--fundo); }
-body.em-pagina .btn-contato:hover span,
-body.em-pagina .btn-contato:hover svg { color: var(--texto); }
 .btn-contato:hover svg { transform: translate(2px, -2px); }
 
 .acoes { display: flex; gap: 12px; margin-left: clamp(16px, 3vw, 48px); }
@@ -178,7 +172,7 @@ body.escuro .icone .lua { display: none; }
   font-weight: 700;
   margin-bottom: clamp(16px, 4vh, 40px);
 }
-.sorriso { width: 20px; height: 20px; color: var(--destaque); }
+.sorriso { width: 22px; height: 22px; color: var(--destaque); transform: rotate(18deg); }
 
 .titulo-gif img {
   width: min(100%, 520px);
@@ -189,8 +183,8 @@ body.escuro .titulo-gif img { filter: invert(1) hue-rotate(180deg) brightness(1.
 
 .frase {
   margin-top: clamp(16px, 4vh, 36px);
-  max-width: 34ch;
-  font-size: clamp(15px, 1.25vw, 18px);
+  max-width: none;
+  font-size: clamp(14px, 1.2vw, 18px);
   font-weight: 700;
   line-height: 1.55;
 }
@@ -204,11 +198,11 @@ body.escuro .titulo-gif img { filter: invert(1) hue-rotate(180deg) brightness(1.
 }
 .circulada svg {
   position: absolute;
-  left: -10%; top: -32%;
-  width: 120%; height: 164%;
+  left: -11%; top: -36%;
+  width: 122%; height: 172%;
   color: var(--destaque);
-  stroke-dasharray: 340;
-  stroke-dashoffset: 340;
+  stroke-dasharray: 360;
+  stroke-dashoffset: 360;
   animation: desenhar 1.2s var(--ease) 1.4s forwards;
   pointer-events: none;
 }
@@ -264,23 +258,29 @@ body.escuro .logos img { filter: invert(1); }
 
 /* ========== PÁGINAS (círculo que cresce do clique) ========== */
 .pagina {
-  --x: 50%;
-  --y: 50%;
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: var(--texto);   /* cor invertida em relação ao início */
-  color: var(--fundo);
-  clip-path: circle(0% at var(--x) var(--y));
+  background: var(--fundo);   /* páginas seguem o tema (claro ou escuro) */
+  color: var(--texto);
   visibility: hidden;
-  transition: clip-path .8s var(--ease), visibility 0s linear .8s;
 }
-.pagina.aberta {
-  clip-path: circle(150% at var(--x) var(--y));
-  visibility: visible;
-  transition: clip-path .9s var(--ease), visibility 0s;
+/* o recorte em círculo é animado pelo script.js */
+.pagina.aberta { visibility: visible; }
+
+/* contorno que acompanha o círculo enquanto ele abre/fecha */
+.anel {
+  position: fixed;
+  left: 0; top: 0;
+  width: 0; height: 0;
+  border-radius: 50%;
+  border: 3px solid var(--roxo);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--roxo) 25%, transparent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 101;
 }
-.pagina.sem-transicao { transition: none; }
 
 .pagina-miolo {
   height: 100%;
@@ -314,9 +314,8 @@ body.escuro .logos img { filter: invert(1); }
   text-transform: none;
   letter-spacing: 0;
   font-size: .62em;
-  color: #b9a6ff;
+  color: var(--destaque);
 }
-body.escuro .pagina-titulo em { color: var(--roxo); }
 
 .pagina.aberta .pagina-titulo { animation: subir .8s var(--ease) .25s both; }
 .pagina.aberta .pagina-conteudo { animation: subir .8s var(--ease) .4s both; }
@@ -332,8 +331,7 @@ body.escuro .pagina-titulo em { color: var(--roxo); }
 .texto { font-size: 17px; line-height: 1.65; max-width: 64ch; font-weight: 500; }
 .texto p + p { margin-top: 1em; }
 .lead { font-size: clamp(20px, 2.2vw, 28px); line-height: 1.35; font-weight: 700; }
-.texto h3 { font-size: 15px; font-weight: 800; margin: 28px 0 8px; color: #b9a6ff; }
-body.escuro .texto h3 { color: var(--roxo); }
+.texto h3 { font-size: 15px; font-weight: 800; margin: 28px 0 8px; color: var(--destaque); }
 .texto h3:first-child { margin-top: 0; }
 
 .linha-tempo div {
@@ -380,8 +378,7 @@ body.escuro .texto h3 { color: var(--roxo); }
   text-decoration: none;
   transition: padding .4s var(--ease), color .3s;
 }
-.lista-grande a:hover { padding-left: 16px; color: #b9a6ff; }
-body.escuro .lista-grande a:hover { color: var(--roxo); }
+.lista-grande a:hover { padding-left: 16px; color: var(--destaque); }
 .lista-grande small { font-size: 15px; font-weight: 600; text-transform: none; opacity: .7; }
 
 .contato-grande {
@@ -398,25 +395,18 @@ body.escuro .lista-grande a:hover { color: var(--roxo); }
 
 /* ========== MENU MOBILE ========== */
 .menu-mobile {
-  --x: 100%;
-  --y: 0%;
   position: fixed;
   inset: 0;
   z-index: 250;
   background: var(--roxo);
   color: var(--branco);
-  clip-path: circle(0% at var(--x) var(--y));
   visibility: hidden;
-  transition: clip-path .7s var(--ease), visibility 0s linear .7s;
   display: flex;
   align-items: center;
   padding: var(--topo-h) var(--lateral) 40px;
 }
-.menu-mobile.aberto {
-  clip-path: circle(150% at var(--x) var(--y));
-  visibility: visible;
-  transition: clip-path .8s var(--ease), visibility 0s;
-}
+/* o recorte em círculo é animado pelo script.js */
+.menu-mobile.aberto { visibility: visible; }
 .menu-mobile nav { display: flex; flex-direction: column; gap: 6px; }
 .menu-mobile a {
   font-size: clamp(30px, 9vw, 44px);
@@ -450,6 +440,7 @@ body.menu-aberto .logo img { filter: brightness(0) invert(.95); }
   .ola { margin-bottom: 8px; font-size: 14px; }
   .titulo-gif img { width: min(88%, 380px); }
   .frase { margin-top: 10px; font-size: 14px; }
+  .frase .quebra { display: none; }
 
   .logos {
     gap: 12px;

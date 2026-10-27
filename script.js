@@ -1,7 +1,6 @@
 /* ================= PÁGINAS (círculo a partir do clique) ================= */
 var paginaAtual = null;   // id da página aberta, ou null no início
 var camada = 100;         // z-index: cada página nova abre por cima da anterior
-var duracao = 900;
 
 function pontoDoClique(e, el) {
   var r = el.getBoundingClientRect();
@@ -9,6 +8,31 @@ function pontoDoClique(e, el) {
     x: e && e.clientX ? e.clientX : r.left + r.width / 2,
     y: e && e.clientY ? e.clientY : r.top + r.height / 2
   };
+}
+
+/* raio até o canto mais distante da tela, a partir do clique */
+function raio(p) {
+  var w = window.innerWidth, h = window.innerHeight;
+  return Math.ceil(Math.hypot(Math.max(p.x, w - p.x), Math.max(p.y, h - p.y))) + 8;
+}
+
+/* contorno roxo que acompanha o círculo */
+var anel = document.getElementById('anel');
+var semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function animarAnel(p, r, abrindo, z) {
+  if (semMovimento.matches || !anel.animate) return;
+  var d = 2 * r + 'px';
+  anel.style.left = p.x + 'px';
+  anel.style.top = p.y + 'px';
+  anel.style.zIndex = z;
+  anel.getAnimations().forEach(function (a) { a.cancel(); });
+  anel.animate(
+    abrindo
+      ? [{ width: '0px', height: '0px', opacity: 1 }, { width: d, height: d, opacity: 1 }]
+      : [{ width: d, height: d, opacity: 1 }, { width: '0px', height: '0px', opacity: 1 }],
+    { duration: abrindo ? 900 : 800, easing: 'cubic-bezier(.22, 1, .36, 1)' }
+  );
 }
 
 function marcarAtivo(nome) {
@@ -19,6 +43,21 @@ function marcarAtivo(nome) {
   });
 }
 
+/* Anima o recorte em círculo pelo JavaScript (funciona igual no Safari e no Chrome) */
+var EASE = 'cubic-bezier(.22, 1, .36, 1)';
+
+function recorte(p, r) { return 'circle(' + r + 'px at ' + p.x + 'px ' + p.y + 'px)'; }
+
+function pararAnimacoes(el) {
+  if (el.getAnimations) el.getAnimations().forEach(function (a) { a.cancel(); });
+}
+
+function esconder(pagina) {
+  pararAnimacoes(pagina);
+  pagina.classList.remove('aberta');
+  pagina.inert = true;
+}
+
 function abrirPagina(nome, p) {
   if (nome === 'inicio') return voltarAoInicio(p);
   if (nome === paginaAtual) return;
@@ -26,29 +65,30 @@ function abrirPagina(nome, p) {
   var nova = document.getElementById('pagina-' + nome);
   if (!nova) return;
   var anterior = paginaAtual ? document.getElementById('pagina-' + paginaAtual) : null;
+  var r = raio(p);
+  var token = (nova._token || 0) + 1;
+  nova._token = token;
 
-  nova.classList.remove('sem-transicao');
+  pararAnimacoes(nova);
   nova.style.zIndex = ++camada;
-  nova.style.setProperty('--x', p.x + 'px');
-  nova.style.setProperty('--y', p.y + 'px');
   nova.inert = false;
-  // força o navegador a registrar o círculo fechado antes de abrir
-  void nova.offsetWidth;
   nova.classList.add('aberta');
+
+  var tempo = semMovimento.matches ? 1 : 900;
+  if (nova.animate) {
+    nova.animate([{ clipPath: recorte(p, 0) }, { clipPath: recorte(p, r) }], { duration: tempo, easing: EASE });
+  }
+  animarAnel(p, r, true, camada + 1);
 
   document.body.classList.add('em-pagina');
   paginaAtual = nome;
   marcarAtivo(nome);
 
-  // a página antiga some por baixo, depois que a nova cobriu a tela
+  // a página antiga some por baixo depois que a nova cobriu a tela
   if (anterior) {
     setTimeout(function () {
-      if (paginaAtual === nome) {
-        anterior.classList.add('sem-transicao');
-        anterior.classList.remove('aberta');
-        anterior.inert = true;
-      }
-    }, duracao);
+      if (paginaAtual === nome && anterior !== nova) esconder(anterior);
+    }, tempo);
   }
 
   setTimeout(function () { nova.querySelector('.pagina-titulo').focus({ preventScroll: true }); }, 300);
@@ -57,16 +97,36 @@ function abrirPagina(nome, p) {
 function voltarAoInicio(p) {
   if (!paginaAtual) return;
   var atual = document.getElementById('pagina-' + paginaAtual);
-  atual.classList.remove('sem-transicao');
-  if (p) {
-    atual.style.setProperty('--x', p.x + 'px');
-    atual.style.setProperty('--y', p.y + 'px');
-  }
-  atual.classList.remove('aberta');
-  atual.inert = true;
+  if (!p) p = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  var r = raio(p);
+  var token = (atual._token || 0) + 1;
+  atual._token = token;
+
+  // qualquer outra página que ainda esteja aberta por baixo sai já
+  document.querySelectorAll('.pagina.aberta').forEach(function (pg) { if (pg !== atual) esconder(pg); });
+
   paginaAtual = null;
+  atual.inert = true;
   document.body.classList.remove('em-pagina');
   marcarAtivo('inicio');
+
+  var tempo = semMovimento.matches ? 1 : 800;
+  var terminou = false;
+  function fim() {
+    if (terminou || atual._token !== token) return;
+    terminou = true;
+    esconder(atual);
+  }
+
+  pararAnimacoes(atual);
+  if (atual.animate) {
+    var a = atual.animate([{ clipPath: recorte(p, r) }, { clipPath: recorte(p, 0) }],
+      { duration: tempo, easing: EASE, fill: 'forwards' });
+    if (a.finished) a.finished.then(fim, function () {});
+  }
+  animarAnel(p, r, false, parseInt(atual.style.zIndex || 100, 10) + 1);
+  // garantia: mesmo que a animação falhe, a página fecha no fim do tempo
+  setTimeout(fim, tempo + 60);
 }
 
 document.querySelectorAll('[data-pagina]').forEach(function (link) {
@@ -89,18 +149,42 @@ document.addEventListener('keydown', function (e) {
 var menu = document.getElementById('menu-mobile');
 var btnMenu = document.getElementById('btn-menu');
 
+function centroBotaoMenu() {
+  var b = btnMenu.getBoundingClientRect();
+  return { x: b.left + b.width / 2, y: b.top + b.height / 2 };
+}
+
 function abrirMenu() {
-  var r = btnMenu.getBoundingClientRect();
-  menu.style.setProperty('--x', (r.left + r.width / 2) + 'px');
-  menu.style.setProperty('--y', (r.top + r.height / 2) + 'px');
+  var p = centroBotaoMenu();
+  menu._token = (menu._token || 0) + 1;
+  pararAnimacoes(menu);
   menu.inert = false;
   menu.classList.add('aberto');
+  if (menu.animate) {
+    menu.animate([{ clipPath: recorte(p, 0) }, { clipPath: recorte(p, raio(p)) }],
+      { duration: semMovimento.matches ? 1 : 800, easing: EASE });
+  }
   document.body.classList.add('menu-aberto');
   btnMenu.setAttribute('aria-expanded', 'true');
   btnMenu.setAttribute('aria-label', textos[idioma].fecharMenu);
 }
 function fecharMenu() {
-  menu.classList.remove('aberto');
+  var p = centroBotaoMenu();
+  var token = (menu._token || 0) + 1;
+  menu._token = token;
+  var tempo = semMovimento.matches ? 1 : 600;
+  function fim() {
+    if (menu._token !== token) return;
+    pararAnimacoes(menu);
+    menu.classList.remove('aberto');
+  }
+  pararAnimacoes(menu);
+  if (menu.animate) {
+    var a = menu.animate([{ clipPath: recorte(p, raio(p)) }, { clipPath: recorte(p, 0) }],
+      { duration: tempo, easing: EASE, fill: 'forwards' });
+    if (a.finished) a.finished.then(fim, function () {});
+  }
+  setTimeout(fim, tempo + 60);
   menu.inert = true;
   document.body.classList.remove('menu-aberto');
   btnMenu.setAttribute('aria-expanded', 'false');
@@ -129,13 +213,13 @@ btnTema.addEventListener('click', function () {
 });
 
 /* ================= IDIOMA (PT / EN) ================= */
-var circulo = '<svg viewBox="0 0 120 44" preserveAspectRatio="none" aria-hidden="true"><path d="M8 26C6 12 40 4 70 5s46 9 44 19-30 16-60 15S5 34 12 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+var circulo = '<svg viewBox="0 0 120 44" preserveAspectRatio="none" aria-hidden="true"><path d="M30 40C12 38 4 31 6 22 9 10 34 4 62 4c30 0 52 8 52 19 0 11-24 17-54 17C34 40 14 35 9 27" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 
 var textos = {
   pt: {
     inicio: 'Início', sobre: 'Sobre', projetos: 'Projetos', curriculo: 'Currículo', redes: 'Redes Sociais',
     faleComigo: 'Fale comigo', ola: 'Olá, eu sou a Jessica',
-    frase: 'Transformo <em>sonhos</em> em <span class="circulada">soluções' + circulo + '</span> visuais criativas, acessíveis, funcionais e estratégicas!',
+    frase: 'Transformo <em>sonhos</em> em <span class="circulada">soluções' + circulo + '</span> visuais criativas,<br class="quebra"> acessíveis, funcionais e estratégicas!',
     marcas: 'Marcas com que trabalhei',
     tSobre1: 'Sobre', tSobre2: 'mim', tProj1: 'Projetos', tProj2: 'selecionados',
     tCurr1: 'Currículo', tCurr2: 'trajetória', tRedes1: 'Redes', tRedes2: 'sociais', tCont1: 'Fale', tCont2: 'comigo',
@@ -152,7 +236,7 @@ var textos = {
   en: {
     inicio: 'Home', sobre: 'About', projetos: 'Projects', curriculo: 'Resume', redes: 'Social Media',
     faleComigo: "Let's talk", ola: "Hi, I'm Jessica",
-    frase: 'I turn <em>dreams</em> into creative, accessible, functional and strategic visual <span class="circulada">solutions' + circulo + '</span>!',
+    frase: 'I turn <em>dreams</em> into creative, accessible,<br class="quebra"> functional and strategic visual <span class="circulada">solutions' + circulo + '</span>!',
     marcas: 'Brands I have worked with',
     tSobre1: 'About', tSobre2: 'me', tProj1: 'Projects', tProj2: 'selected',
     tCurr1: 'Resume', tCurr2: 'journey', tRedes1: 'Social', tRedes2: 'media', tCont1: "Let's", tCont2: 'talk',
