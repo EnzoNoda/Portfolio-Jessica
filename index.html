@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -147,18 +147,55 @@
   </section>
 
   <section class="pagina" id="pagina-contato" aria-labelledby="t-contato" inert>
-    <div class="pagina-miolo">
-      <h2 class="pagina-titulo" id="t-contato" tabindex="-1"><span data-i18n="tCont1">Fale</span> <em data-i18n="tCont2">comigo</em></h2>
-      <div class="pagina-conteudo texto">
-        <p class="lead" data-i18n="contatoLead">Tem um projeto em mente? Me mande uma mensagem.</p>
-        <a class="contato-grande" href="mailto:email@exemplo.com">email@exemplo.com</a>
-        <p class="contato-extra">WhatsApp: <a href="#">(00) 00000-0000</a></p>
+    <div class="pagina-miolo contato-miolo">
+      <div class="contato">
+        <div class="contato-esquerda">
+          <h2 class="contato-titulo" id="t-contato" tabindex="-1">
+            <img src="imagens/vamos-conversar.webp" alt="Vamos conversar?" data-i18n-alt="vamosConversar">
+          </h2>
+
+          <div class="copiar">
+            <button type="button" class="copiar-email" id="copiar-email" data-email="jessicaluartedesigner@gmail.com">jessicaluartedesigner@gmail.com</button>
+            <span class="copiar-aviso" id="copiar-aviso" aria-live="polite" data-i18n="cliqueCopiar">Clique para copiar!</span>
+          </div>
+        </div>
+
+        <!-- Formulário enviado pela Web3Forms (grátis, sem servidor) -->
+        <form class="cartao-form" id="form-contato" novalidate>
+          <p class="form-titulo" data-i18n="formTitulo">Ou escreva uma mensagem abaixo</p>
+
+          <!-- COLE AQUI a chave de acesso gerada em https://web3forms.com com o email da Jessica -->
+          <input type="hidden" name="access_key" value="837be845-2527-4f71-861a-77d4248563b5">
+          <input type="hidden" name="subject" value="Nova mensagem pelo portfólio">
+          <input type="hidden" name="from_name" value="Portfólio Jessica Deart">
+          <!-- armadilha contra robôs: pessoas não veem este campo -->
+          <input type="checkbox" name="botcheck" class="armadilha" tabindex="-1" autocomplete="off">
+
+          <div class="form-linha">
+            <label class="campo">
+              <span data-i18n="nome">Nome</span>
+              <input type="text" name="name" required autocomplete="name" placeholder="Maria Santos" data-i18n-ph="phNome">
+            </label>
+            <label class="campo">
+              <span>Email</span>
+              <input type="email" name="email" required autocomplete="email" placeholder="maria@email.com">
+            </label>
+          </div>
+
+          <label class="campo">
+            <span data-i18n="mensagem">Mensagem</span>
+            <textarea name="message" rows="4" required placeholder="Escreva a sua mensagem aqui..." data-i18n-ph="phMensagem"></textarea>
+          </label>
+
+          <button type="submit" class="btn-enviar" id="btn-enviar" data-i18n="enviar">Enviar</button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
       </div>
     </div>
   </section>
 
   <div class="anel" id="anel" aria-hidden="true"></div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>

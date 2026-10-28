@@ -381,17 +381,118 @@ body.escuro .logos img { filter: invert(1); }
 .lista-grande a:hover { padding-left: 16px; color: var(--destaque); }
 .lista-grande small { font-size: 15px; font-weight: 600; text-transform: none; opacity: .7; }
 
-.contato-grande {
-  display: inline-block;
-  margin-top: 24px;
-  font-size: clamp(26px, 4.5vw, 60px);
-  font-weight: 900;
-  text-decoration: none;
-  border-bottom: 3px solid currentColor;
-  line-height: 1.15;
-  word-break: break-all;
+/* ---------- Fale comigo ---------- */
+.contato-miolo { justify-content: center; }
+
+.contato {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 440px);
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
 }
-.contato-extra { margin-top: 24px; font-weight: 600; }
+
+.contato-titulo { outline: none; }
+.contato-titulo img {
+  width: min(100%, 460px);
+  height: auto;
+}
+body.escuro .contato-titulo img { filter: brightness(0) invert(.95); }
+
+.contato .pagina-conteudo { overflow: visible; }
+
+.copiar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+  margin-top: clamp(24px, 6vh, 56px);
+}
+.copiar-email {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: inherit;
+  background: transparent;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  padding: .5em 1em;
+  cursor: copy;
+  transition: background .3s, color .3s;
+}
+.copiar-email:hover,
+.copiar-email:focus-visible { background: var(--texto); color: var(--fundo); }
+.copiar-aviso {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  transition: color .3s;
+}
+.copiar-aviso.ok { color: var(--destaque); }
+
+.cartao-form {
+  background: color-mix(in srgb, var(--texto) 6%, var(--fundo));
+  border-radius: 10px;
+  padding: 24px 20px 20px;
+  box-shadow: 0 4px 6px -2px rgba(0, 0, 0, .12), 0 12px 32px -12px rgba(0, 0, 0, .18);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.form-titulo {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--destaque);
+}
+.form-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.campo { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 11px; font-weight: 700; }
+.campo input,
+.campo textarea {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--texto);
+  background: color-mix(in srgb, var(--texto) 8%, var(--fundo));
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  padding: 7px 10px;
+  width: 100%;
+  min-width: 0;
+  resize: none;
+  transition: border-color .2s, background .2s;
+}
+.campo input::placeholder,
+.campo textarea::placeholder { color: color-mix(in srgb, var(--texto) 45%, transparent); }
+.campo input:focus,
+.campo textarea:focus { outline: none; border-color: var(--destaque); background: var(--fundo); }
+.campo .erro { border-color: #c0392b; }
+
+.btn-enviar {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--roxo);
+  border: 0;
+  border-radius: 999px;
+  padding: 8px;
+  margin-top: 4px;
+  cursor: pointer;
+  transition: filter .2s, transform .2s;
+}
+.btn-enviar:hover { filter: brightness(1.12); }
+.btn-enviar:active { transform: scale(.98); }
+.btn-enviar:disabled { opacity: .6; cursor: progress; }
+
+.form-status { font-size: 13px; font-weight: 600; min-height: 1.2em; }
+.form-status.ok { color: var(--destaque); }
+.form-status.falha { color: #c0392b; }
+body.escuro .form-status.falha { color: #ff8a80; }
+
+.armadilha { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.pagina.aberta .contato { animation: subir .8s var(--ease) .3s both; }
 
 /* ========== MENU MOBILE ========== */
 .menu-mobile {
@@ -449,6 +550,12 @@ body.menu-aberto .logo img { filter: brightness(0) invert(.95); }
   .logos img { height: calc(var(--h, 1) * 15px); }
 
   .grade-projetos { grid-template-columns: 1fr; }
+  .contato-miolo { justify-content: flex-start; overflow-y: auto; }
+  .contato { grid-template-columns: 1fr; gap: 24px; }
+  .contato-titulo img { width: min(100%, 340px); }
+  .copiar { margin-top: 16px; gap: 8px 16px; }
+  .copiar-email { font-size: 13px; }
+  .form-linha { grid-template-columns: 1fr; }
   .linha-tempo div { grid-template-columns: 1fr; gap: 2px; }
   .texto { font-size: 16px; }
 }

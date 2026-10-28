@@ -91,7 +91,7 @@ function abrirPagina(nome, p) {
     }, tempo);
   }
 
-  setTimeout(function () { nova.querySelector('.pagina-titulo').focus({ preventScroll: true }); }, 300);
+  setTimeout(function () { nova.querySelector('.pagina-titulo, .contato-titulo').focus({ preventScroll: true }); }, 300);
 }
 
 function voltarAoInicio(p) {
@@ -229,6 +229,13 @@ var textos = {
     experiencia: 'Experiência', formacao: 'Formação', ferramentas: 'Ferramentas', hoje: 'hoje',
     cargo: 'Cargo', empresa: 'Empresa', curso: 'Curso', instituicao: 'Instituição',
     contatoLead: 'Tem um projeto em mente? Me mande uma mensagem.',
+    vamosConversar: 'Vamos conversar?', cliqueCopiar: 'Clique para copiar!', copiado: 'Email copiado!',
+    formTitulo: 'Ou escreva uma mensagem abaixo', nome: 'Nome', mensagem: 'Mensagem',
+    phNome: 'Maria Santos', phMensagem: 'Escreva a sua mensagem aqui...',
+    enviar: 'Enviar', enviando: 'Enviando...', enviado: 'Mensagem enviada! Obrigada, respondo em breve.',
+    erroCampos: 'Preencha nome, um email válido e a mensagem.',
+    erroEnvio: 'Não deu para enviar agora. Tente de novo ou mande para o email ao lado.',
+    semChave: 'Formulário ainda sem chave da Web3Forms (veja o index.html).',
     abrirMenu: 'Abrir menu', fecharMenu: 'Fechar menu',
     temaEscuro: 'Ativar modo escuro', temaClaro: 'Ativar modo claro',
     trocarIdioma: 'Mudar idioma para inglês', siglaOutro: 'EN', tituloIdioma: 'English', lang: 'pt-BR'
@@ -246,6 +253,13 @@ var textos = {
     experiencia: 'Experience', formacao: 'Education', ferramentas: 'Tools', hoje: 'now',
     cargo: 'Role', empresa: 'Company', curso: 'Degree', instituicao: 'School',
     contatoLead: 'Have a project in mind? Send me a message.',
+    vamosConversar: "Let's talk?", cliqueCopiar: 'Click to copy!', copiado: 'Email copied!',
+    formTitulo: 'Or write a message below', nome: 'Name', mensagem: 'Message',
+    phNome: 'Maria Santos', phMensagem: 'Write your message here...',
+    enviar: 'Send', enviando: 'Sending...', enviado: "Message sent! Thank you, I'll reply soon.",
+    erroCampos: 'Please fill in your name, a valid email and a message.',
+    erroEnvio: "Couldn't send right now. Try again or write to the email on the left.",
+    semChave: 'Form has no Web3Forms key yet (see index.html).',
     abrirMenu: 'Open menu', fecharMenu: 'Close menu',
     temaEscuro: 'Turn on dark mode', temaClaro: 'Turn on light mode',
     trocarIdioma: 'Switch language to Portuguese', siglaOutro: 'PT', tituloIdioma: 'Português', lang: 'en'
@@ -268,6 +282,12 @@ function aplicarIdioma(novo) {
   document.querySelectorAll('[data-i18n-aria]').forEach(function (el) {
     var v = t[el.dataset.i18nAria]; if (v) el.setAttribute('aria-label', v);
   });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function (el) {
+    var v = t[el.dataset.i18nPh]; if (v) el.setAttribute('placeholder', v);
+  });
+  document.querySelectorAll('[data-i18n-alt]').forEach(function (el) {
+    var v = t[el.dataset.i18nAlt]; if (v) el.setAttribute('alt', v);
+  });
   document.getElementById('sigla-idioma').textContent = t.siglaOutro;
   btnIdioma.setAttribute('aria-label', t.trocarIdioma);
   btnIdioma.title = t.tituloIdioma;
@@ -279,6 +299,94 @@ btnIdioma.addEventListener('click', function () {
   aplicarIdioma(novo);
   guardar('idioma', novo);
 });
+
+/* ================= FALE COMIGO ================= */
+/* Copiar email */
+var btnCopiar = document.getElementById('copiar-email');
+var avisoCopiar = document.getElementById('copiar-aviso');
+var timerCopiar;
+
+function copiarTexto(texto) {
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(texto);
+  return new Promise(function (ok, falha) {
+    var area = document.createElement('textarea');
+    area.value = texto; area.setAttribute('readonly', '');
+    area.style.position = 'fixed'; area.style.opacity = '0';
+    document.body.appendChild(area); area.select();
+    try { document.execCommand('copy') ? ok() : falha(); } catch (e) { falha(e); }
+    document.body.removeChild(area);
+  });
+}
+
+if (btnCopiar) {
+  btnCopiar.addEventListener('click', function () {
+    copiarTexto(btnCopiar.dataset.email).then(function () {
+      avisoCopiar.textContent = textos[idioma].copiado;
+      avisoCopiar.classList.add('ok');
+      clearTimeout(timerCopiar);
+      timerCopiar = setTimeout(function () {
+        avisoCopiar.textContent = textos[idioma].cliqueCopiar;
+        avisoCopiar.classList.remove('ok');
+      }, 2200);
+    }, function () {
+      window.location.href = 'mailto:' + btnCopiar.dataset.email;
+    });
+  });
+}
+
+/* Enviar formulário pela Web3Forms */
+var form = document.getElementById('form-contato');
+var statusForm = document.getElementById('form-status');
+var btnEnviar = document.getElementById('btn-enviar');
+
+function mostrarStatus(chave, tipo) {
+  statusForm.textContent = textos[idioma][chave];
+  statusForm.className = 'form-status' + (tipo ? ' ' + tipo : '');
+}
+
+if (form) {
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var campos = form.querySelectorAll('[required]');
+    var valido = true;
+    campos.forEach(function (c) {
+      var ok = c.value.trim() !== '' && (c.type !== 'email' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.value.trim()));
+      c.classList.toggle('erro', !ok);
+      if (!ok) valido = false;
+    });
+    if (!valido) return mostrarStatus('erroCampos', 'falha');
+
+    var dados = new FormData(form);
+    if (dados.get('botcheck')) return; // robô
+    if (!dados.get('access_key') || dados.get('access_key') === 'COLE_SUA_CHAVE_AQUI') {
+      return mostrarStatus('semChave', 'falha');
+    }
+
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = textos[idioma].enviando;
+    statusForm.textContent = '';
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(Object.fromEntries(dados))
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (res.success) { form.reset(); mostrarStatus('enviado', 'ok'); }
+        else mostrarStatus('erroEnvio', 'falha');
+      })
+      .catch(function () { mostrarStatus('erroEnvio', 'falha'); })
+      .then(function () {
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = textos[idioma].enviar;
+      });
+  });
+
+  form.querySelectorAll('[required]').forEach(function (c) {
+    c.addEventListener('input', function () { c.classList.remove('erro'); });
+  });
+}
 
 /* preferências salvas */
 if (ler('idioma') === 'en') aplicarIdioma('en');
