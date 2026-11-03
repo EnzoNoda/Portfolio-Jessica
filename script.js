@@ -91,7 +91,7 @@ function abrirPagina(nome, p) {
     }, tempo);
   }
 
-  setTimeout(function () { nova.querySelector('.pagina-titulo, .contato-titulo').focus({ preventScroll: true }); }, 300);
+  setTimeout(function () { var alvo = nova.querySelector('[tabindex="-1"]'); if (alvo) alvo.focus({ preventScroll: true }); }, 300);
 }
 
 function voltarAoInicio(p) {
@@ -141,6 +141,7 @@ document.querySelectorAll('[data-pagina]').forEach(function (link) {
 
 document.addEventListener('keydown', function (e) {
   if (e.key !== 'Escape') return;
+  if (modalAberto()) return fecharModalProjeto();
   if (document.body.classList.contains('menu-aberto')) return fecharMenu();
   if (paginaAtual) voltarAoInicio(null);
 });
@@ -229,7 +230,14 @@ var textos = {
     experiencia: 'Experiência', formacao: 'Formação', ferramentas: 'Ferramentas', hoje: 'hoje',
     cargo: 'Cargo', empresa: 'Empresa', curso: 'Curso', instituicao: 'Instituição',
     contatoLead: 'Tem um projeto em mente? Me mande uma mensagem.',
-    vamosConversar: 'Vamos conversar?', cliqueCopiar: 'Clique para copiar!', copiado: 'Email copiado!',
+    projetosSub: 'Onde <em>ideias</em> se tornam <em>realidade</em>!',
+    filtrarProjetos: 'Filtrar projetos', fTodos: 'Todos', fCapa: 'Capa', fDiagramacao: 'Diagramação',
+    fIdentidade: 'Identidade visual', fEmbalagem: 'Embalagem',
+    semProjetos: 'Ainda não tem projetos nesta categoria.',
+    verBehance: 'Ver no Behance', fecharProjeto: 'Fechar projeto', abrirProjeto: 'Abrir projeto',
+    embedTexto: 'O projeto completo, com todas as imagens, está no Behance.',
+    designerAlt: 'Designer gráfica, editorial, de identidade visual, de interface e de produto',
+    meEncontre: 'Me encontre nas redes', vamosConversar: 'Vamos conversar?', cliqueCopiar: 'Clique para copiar!', copiado: 'Email copiado!',
     formTitulo: 'Ou escreva uma mensagem abaixo', nome: 'Nome', mensagem: 'Mensagem',
     phNome: 'Maria Santos', phMensagem: 'Escreva a sua mensagem aqui...',
     enviar: 'Enviar', enviando: 'Enviando...', enviado: 'Mensagem enviada! Obrigada, respondo em breve.',
@@ -253,7 +261,14 @@ var textos = {
     experiencia: 'Experience', formacao: 'Education', ferramentas: 'Tools', hoje: 'now',
     cargo: 'Role', empresa: 'Company', curso: 'Degree', instituicao: 'School',
     contatoLead: 'Have a project in mind? Send me a message.',
-    vamosConversar: "Let's talk?", cliqueCopiar: 'Click to copy!', copiado: 'Email copied!',
+    projetosSub: 'Where <em>ideas</em> become <em>reality</em>!',
+    filtrarProjetos: 'Filter projects', fTodos: 'All', fCapa: 'Cover', fDiagramacao: 'Typesetting',
+    fIdentidade: 'Visual identity', fEmbalagem: 'Packaging',
+    semProjetos: 'No projects in this category yet.',
+    verBehance: 'View on Behance', fecharProjeto: 'Close project', abrirProjeto: 'Open project',
+    embedTexto: 'The full project, with all the images, is on Behance.',
+    designerAlt: 'Editorial, brand, graphic, UI/UX and product designer',
+    meEncontre: 'Find me on social media', vamosConversar: "Let's talk?", cliqueCopiar: 'Click to copy!', copiado: 'Email copied!',
     formTitulo: 'Or write a message below', nome: 'Name', mensagem: 'Message',
     phNome: 'Maria Santos', phMensagem: 'Write your message here...',
     enviar: 'Send', enviando: 'Sending...', enviado: "Message sent! Thank you, I'll reply soon.",
@@ -288,6 +303,10 @@ function aplicarIdioma(novo) {
   document.querySelectorAll('[data-i18n-alt]').forEach(function (el) {
     var v = t[el.dataset.i18nAlt]; if (v) el.setAttribute('alt', v);
   });
+  document.querySelectorAll('[data-src-pt]').forEach(function (el) {
+    var v = el.getAttribute('data-src-' + novo); if (v && el.getAttribute('src') !== v) el.setAttribute('src', v);
+  });
+  if (typeof renderProjetos === 'function') renderProjetos();
   document.getElementById('sigla-idioma').textContent = t.siglaOutro;
   btnIdioma.setAttribute('aria-label', t.trocarIdioma);
   btnIdioma.title = t.tituloIdioma;
@@ -299,6 +318,176 @@ btnIdioma.addEventListener('click', function () {
   aplicarIdioma(novo);
   guardar('idioma', novo);
 });
+
+/* ================= PROJETOS ================= */
+/*
+  Para adicionar um projeto, copie um bloco abaixo.
+  - id: o número do projeto no Behance (o que aparece no link do embed)
+  - capa: imagem local opcional (ex.: 'imagens/projetos/gatose.webp').
+          Se o arquivo não existir, o card mostra a prévia do próprio Behance.
+  - imagens: lista opcional de imagens locais; se tiver, o modal mostra as
+             imagens empilhadas (como no Behance) em vez do embed.
+*/
+var projetos = [
+  { id: '240092893', categoria: 'diagramacao', capa: 'imagens/projetos/spring-blossom.webp', imagens: [],
+    titulo: { pt: 'Diagramação “Spring Blossom”', en: 'Typesetting “Spring Blossom”' }, meta: '2025 | Editora Viseu' },
+  { id: '240026291', categoria: 'capa', capa: 'imagens/projetos/gatose.webp', imagens: [],
+    titulo: { pt: 'Capa “Gatose”', en: 'Book cover “Gatose”' }, meta: '2025 | Editora Viseu' },
+  { id: '238470329', categoria: 'capa', capa: 'imagens/projetos/antidotos.webp', imagens: [],
+    titulo: { pt: 'Capa “Antídotos”', en: 'Book cover “Antídotos”' }, meta: '2025 | Editora Viseu' },
+  { id: '237404435', categoria: 'capa', capa: 'imagens/projetos/amendoim-de-ouro.webp', imagens: [],
+    titulo: { pt: 'Capa “Amendoim de ouro”', en: 'Book cover “Amendoim de ouro”' }, meta: 'Editora Viseu' },
+  { id: '154465365', categoria: 'identidade', capa: 'imagens/projetos/engenium.webp', imagens: [],
+    titulo: { pt: 'Identidade visual “Engenium”', en: 'Visual identity “Engenium”' }, meta: 'Engenium' },
+  { id: '142513155', categoria: 'identidade', capa: 'imagens/projetos/attini-cross.webp', imagens: [],
+    titulo: { pt: 'Identidade visual “Attini Cross”', en: 'Visual identity “Attini Cross”' }, meta: 'Attini Cross' },
+  { id: '142513831', categoria: 'identidade', capa: 'imagens/projetos/shop-maais.webp', imagens: [],
+    titulo: { pt: 'Identidade visual “Shop Maais”', en: 'Visual identity “Shop Maais”' }, meta: 'Shop Maais' },
+  { id: '133408155', categoria: 'identidade', capa: 'imagens/projetos/luigi-di-martino.webp', imagens: [],
+    titulo: { pt: 'Identidade visual “Luigi Di Martino”', en: 'Visual identity “Luigi Di Martino”' }, meta: 'Luigi Di Martino' },
+  { id: '133229689', categoria: 'identidade', capa: 'imagens/projetos/cicloscience.webp', imagens: [],
+    titulo: { pt: 'Identidade visual “CicloScience”', en: 'Visual identity “CicloScience”' }, meta: 'CicloScience' },
+  { id: '133403151', categoria: 'identidade', capa: 'imagens/projetos/nucleo-noroeste.webp', imagens: [],
+    titulo: { pt: 'Identidade visual “Núcleo Noroeste”', en: 'Visual identity “Núcleo Noroeste”' }, meta: 'Núcleo Noroeste' },
+  { id: '124418863', categoria: 'identidade', capa: 'imagens/projetos/gecor.webp', imagens: [],
+    titulo: { pt: 'Identidade visual “GECor”', en: 'Visual identity “GECor”' }, meta: 'GECor' },
+  { id: '184099129', categoria: 'embalagem', capa: 'imagens/projetos/sitio-eliza.webp', imagens: [],
+    titulo: { pt: 'Embalagem “Sítio Eliza Cafés Especiais”', en: 'Packaging “Sítio Eliza Cafés Especiais”' }, meta: 'Sítio Eliza Cafés Especiais' }
+];
+
+var filtroAtual = 'todos';
+var gradeProjetos = document.getElementById('grade-projetos');
+var semProjetos = document.getElementById('sem-projetos');
+
+function urlEmbed(id) { return 'https://www.behance.net/embed/project/' + id + '?ilo0=1'; }
+function urlBehance(id) { return 'https://www.behance.net/gallery/' + id; }
+
+function iframeBehance(id, titulo) {
+  var f = document.createElement('iframe');
+  f.src = urlEmbed(id);
+  f.title = titulo;
+  f.loading = 'lazy';
+  f.setAttribute('allow', 'clipboard-write');
+  f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+  f.setAttribute('allowfullscreen', '');
+  return f;
+}
+
+function renderProjetos() {
+  if (!gradeProjetos) return;
+  gradeProjetos.innerHTML = '';
+  projetos.forEach(function (p, i) {
+    var titulo = p.titulo[idioma] || p.titulo.pt;
+    var card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'projeto';
+    card.dataset.categoria = p.categoria;
+    card.dataset.indice = i;
+    card.setAttribute('aria-label', textos[idioma].abrirProjeto + ': ' + titulo);
+
+    var capa = document.createElement('div');
+    capa.className = 'projeto-capa';
+    var img = document.createElement('img');
+    img.alt = '';
+    img.loading = 'lazy';
+    img.onerror = function () { capa.replaceChild(iframeBehance(p.id, titulo), img); };
+    img.src = p.capa || '';
+    if (!p.capa) img.onerror();
+    capa.appendChild(img);
+
+    var h = document.createElement('h3'); h.textContent = titulo;
+    var m = document.createElement('p'); m.textContent = p.meta || '';
+    card.appendChild(capa); card.appendChild(h); card.appendChild(m);
+    card.addEventListener('click', function () { abrirModalProjeto(i, card); });
+    gradeProjetos.appendChild(card);
+  });
+  aplicarFiltro(filtroAtual);
+}
+
+function aplicarFiltro(filtro) {
+  filtroAtual = filtro;
+  var visiveis = 0;
+  document.querySelectorAll('.filtro').forEach(function (b) {
+    var ativo = b.dataset.filtro === filtro;
+    b.classList.toggle('ativo', ativo);
+    b.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+  });
+  if (!gradeProjetos) return;
+  gradeProjetos.querySelectorAll('.projeto').forEach(function (c) {
+    var mostra = filtro === 'todos' || c.dataset.categoria === filtro;
+    c.hidden = !mostra;
+    if (mostra) visiveis++;
+  });
+  semProjetos.hidden = visiveis > 0;
+}
+
+document.querySelectorAll('.filtro').forEach(function (b) {
+  b.addEventListener('click', function () { aplicarFiltro(b.dataset.filtro); });
+});
+
+/* ----- Modal do projeto ----- */
+var pmodal = document.getElementById('pmodal');
+var pmodalCorpo = document.getElementById('pmodal-corpo');
+var origemModal = null;
+
+function modalAberto() { return pmodal && !pmodal.hidden && !pmodal.classList.contains('fechando'); }
+
+function abrirModalProjeto(i, origem) {
+  var p = projetos[i];
+  var titulo = p.titulo[idioma] || p.titulo.pt;
+  origemModal = origem || null;
+  document.getElementById('pmodal-titulo').textContent = titulo;
+  document.getElementById('pmodal-meta').textContent = p.meta || '';
+  document.getElementById('pmodal-behance').href = urlBehance(p.id);
+
+  pmodalCorpo.innerHTML = '';
+  if (p.imagens && p.imagens.length) {
+    var pilha = document.createElement('div');
+    pilha.className = 'pmodal-imagens';
+    p.imagens.forEach(function (src) {
+      var img = document.createElement('img');
+      img.src = src; img.alt = titulo; img.loading = 'lazy';
+      pilha.appendChild(img);
+    });
+    pmodalCorpo.appendChild(pilha);
+  } else {
+    var bloco = document.createElement('div');
+    bloco.className = 'pmodal-embed';
+    bloco.appendChild(iframeBehance(p.id, titulo));
+    var txt = document.createElement('p');
+    txt.textContent = textos[idioma].embedTexto;
+    bloco.appendChild(txt);
+    pmodalCorpo.appendChild(bloco);
+  }
+  pmodalCorpo.scrollTop = 0;
+
+  pmodal.classList.remove('fechando');
+  pmodal.hidden = false;
+  document.body.classList.add('modal-aberto');
+  setTimeout(function () { pmodal.querySelector('.pmodal-painel').focus({ preventScroll: true }); }, 50);
+}
+
+function fecharModalProjeto() {
+  if (!modalAberto()) return;
+  pmodal.classList.add('fechando');
+  var tempo = semMovimento.matches ? 1 : 300;
+  setTimeout(function () {
+    if (!pmodal.classList.contains('fechando')) return;
+    pmodal.hidden = true;
+    pmodal.classList.remove('fechando');
+    pmodalCorpo.innerHTML = ''; // para de carregar o embed
+    document.body.classList.remove('modal-aberto');
+    if (origemModal) origemModal.focus({ preventScroll: true });
+  }, tempo);
+}
+
+if (pmodal) {
+  pmodal.querySelectorAll('[data-fechar-modal]').forEach(function (el) {
+    el.addEventListener('click', fecharModalProjeto);
+  });
+}
+
+renderProjetos();
 
 /* ================= FALE COMIGO ================= */
 /* Copiar email */

@@ -346,22 +346,174 @@ body.escuro .logos img { filter: invert(1); }
 .tags { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
 .tags li { border: 1.5px solid currentColor; border-radius: 999px; padding: .2em .9em; font-size: 15px; font-weight: 600; }
 
+/* ---------- Projetos ---------- */
+.projetos-miolo { max-width: none; }
+.projetos-rolagem { padding: 0 6px 24px; margin: 0 -6px; }
+
+.projetos-topo { margin-bottom: clamp(16px, 3.5vh, 32px); }
+.projetos-titulo { outline: none; }
+.projetos-titulo img { width: min(100%, 470px); height: auto; margin-left: -4px; }
+body.escuro .projetos-titulo img { filter: invert(1) hue-rotate(180deg) brightness(1.15); }
+.projetos-sub { font-size: 14px; font-weight: 700; margin-top: 4px; }
+.projetos-sub em { font-style: normal; color: var(--destaque); }
+
+.filtros { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(20px, 4vh, 36px); }
+.filtro {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: inherit;
+  background: transparent;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  padding: 5px 13px;
+  cursor: pointer;
+  transition: background .25s, color .25s, border-color .25s, transform .2s;
+}
+.filtro:hover { transform: translateY(-1px); }
+.filtro.ativo { background: var(--roxo); border-color: var(--roxo); color: #fff; }
+
 .grade-projetos {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(16px, 2.5vw, 32px);
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2vw, 22px);
 }
-.projeto-img {
-  aspect-ratio: 16 / 10;
+.projeto {
+  display: block;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.projeto[hidden] { display: none; }
+.projeto-capa {
+  position: relative;
+  aspect-ratio: 404 / 316;
   border-radius: 14px;
-  background:
-    radial-gradient(circle, var(--roxo) 2px, transparent 2.5px) 0 0 / 14px 14px,
-    color-mix(in srgb, currentColor 8%, transparent);
-  transition: transform .5s var(--ease);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--texto) 8%, var(--fundo));
+  box-shadow: 0 2px 4px rgba(0,0,0,.06), 0 10px 24px -14px rgba(0,0,0,.35);
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
 }
-.projeto:hover .projeto-img { transform: scale(.98) rotate(-1deg); }
-.projeto h3 { font-size: 18px; font-weight: 800; margin-top: 12px; }
-.projeto p  { font-size: 14px; opacity: .7; font-weight: 500; }
+.projeto-capa img { width: 100%; height: 100%; object-fit: cover; }
+/* prévia do Behance quando ainda não há imagem de capa local */
+.projeto-capa iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none; /* o clique vai para o card, que abre o modal */
+}
+.projeto:hover .projeto-capa,
+.projeto:focus-visible .projeto-capa { transform: translateY(-4px); box-shadow: 0 4px 8px rgba(0,0,0,.08), 0 18px 32px -16px rgba(0,0,0,.45); }
+.projeto h3 { font-size: 15px; font-weight: 700; margin-top: 14px; }
+.projeto p  { font-size: 12px; font-weight: 600; opacity: .6; margin-top: 6px; }
+.sem-projetos { font-weight: 600; opacity: .7; padding: 24px 0; }
+
+/* ---------- Modal do projeto (estilo Behance) ---------- */
+.pmodal { position: fixed; inset: 0; z-index: 500; }
+.pmodal[hidden] { display: none; }
+.pmodal-fundo {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 12, 40, .55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: modalFundo .35s ease both;
+}
+.pmodal-fechar {
+  position: absolute;
+  top: 14px; right: 14px;
+  z-index: 2;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background .2s, transform .3s var(--ease);
+}
+.pmodal-fechar:hover { background: rgba(255,255,255,.26); transform: rotate(90deg); }
+.pmodal-fechar svg { width: 20px; height: 20px; }
+.pmodal-painel {
+  position: absolute;
+  left: 50%;
+  top: clamp(16px, 5vh, 48px);
+  bottom: 0;
+  width: min(1000px, 100% - 32px);
+  transform: translateX(-50%);
+  background: var(--fundo);
+  color: var(--texto);
+  border-radius: 14px 14px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  outline: none;
+  animation: modalPainel .55s var(--ease) both;
+}
+.pmodal.fechando .pmodal-fundo { animation: modalFundo .3s ease reverse both; }
+.pmodal.fechando .pmodal-painel { animation: modalPainelSai .3s ease-in both; }
+@keyframes modalFundo { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalPainel { from { opacity: 0; transform: translate(-50%, 60px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes modalPainelSai { to { opacity: 0; transform: translate(-50%, 60px); } }
+
+.pmodal-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px clamp(16px, 3vw, 28px);
+  border-bottom: 1px solid color-mix(in srgb, var(--texto) 12%, transparent);
+}
+.pmodal-titulo { font-size: clamp(16px, 1.6vw, 20px); font-weight: 800; }
+.pmodal-meta { font-size: 13px; font-weight: 600; opacity: .6; margin-top: 2px; }
+.pmodal-behance {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--roxo);
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  transition: filter .2s;
+}
+.pmodal-behance:hover { filter: brightness(1.12); }
+.pmodal-behance svg { width: 13px; height: 13px; }
+
+.pmodal-corpo { flex: 1; min-height: 0; overflow-y: auto; }
+/* imagens do projeto empilhadas, como no Behance */
+.pmodal-imagens img { display: block; width: 100%; height: auto; }
+/* enquanto não há imagens locais: o embed oficial do Behance */
+.pmodal-embed {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: clamp(20px, 5vh, 48px) 16px;
+}
+.pmodal-embed iframe {
+  width: min(100%, 640px);
+  aspect-ratio: 404 / 316;
+  height: auto;
+  border: 0;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--texto) 6%, var(--fundo));
+  box-shadow: 0 18px 40px -20px rgba(0,0,0,.45);
+}
+.pmodal-embed p { font-size: 14px; font-weight: 600; opacity: .7; text-align: center; max-width: 46ch; }
 
 .lista-grande { list-style: none; }
 .lista-grande a {
@@ -380,6 +532,50 @@ body.escuro .logos img { filter: invert(1); }
 }
 .lista-grande a:hover { padding-left: 16px; color: var(--destaque); }
 .lista-grande small { font-size: 15px; font-weight: 600; text-transform: none; opacity: .7; }
+
+/* ---------- Redes sociais ---------- */
+.redes-miolo { justify-content: center; max-width: none; }
+.redes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
+  animation: subir .8s var(--ease) .3s both;
+}
+.pagina:not(.aberta) .redes { animation: none; }
+.redes-titulo { outline: none; }
+.redes-titulo img { width: min(100%, 520px); height: auto; }
+body.escuro .redes-titulo img { filter: brightness(0) invert(.95); }
+
+.redes-lista { list-style: none; display: flex; flex-direction: column; gap: clamp(16px, 5.5vh, 52px); }
+.redes-lista a {
+  --icone-fundo: var(--fundo);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color .25s, transform .35s var(--ease);
+}
+.rede-icone {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--texto);
+  color: var(--fundo);
+  display: grid;
+  place-items: center;
+  transition: background .25s, transform .35s var(--ease);
+}
+.rede-icone svg { width: 20px; height: 20px; }
+.redes-lista a:hover,
+.redes-lista a:focus-visible { color: var(--destaque); transform: translateX(6px); }
+.redes-lista a:hover .rede-icone,
+.redes-lista a:focus-visible .rede-icone { background: var(--roxo); color: #fff; transform: rotate(-10deg); }
+.redes-lista a:hover { --icone-fundo: var(--roxo); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---------- Fale comigo ---------- */
 .contato-miolo { justify-content: center; }
@@ -528,6 +724,10 @@ body.menu-aberto .logo img { filter: brightness(0) invert(.95); }
   .logo img { height: 24px; }
 }
 
+@media (max-width: 960px) and (min-width: 721px) {
+  .grade-projetos { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 720px) {
   .hero {
     grid-template-columns: 1fr;
@@ -550,8 +750,20 @@ body.menu-aberto .logo img { filter: brightness(0) invert(.95); }
   .logos img { height: calc(var(--h, 1) * 15px); }
 
   .grade-projetos { grid-template-columns: 1fr; }
+  .projetos-titulo img { width: min(100%, 330px); }
+  .filtros { gap: 8px; }
+  .filtro { font-size: 12px; padding: 4px 11px; }
+  .pmodal-painel { width: 100%; top: 56px; border-radius: 14px 14px 0 0; }
+  .pmodal-fechar { top: 8px; right: 8px; }
+  .pmodal-topo { flex-direction: column; align-items: flex-start; }
   .contato-miolo { justify-content: flex-start; overflow-y: auto; }
   .contato { grid-template-columns: 1fr; gap: 24px; }
+  .redes-miolo { justify-content: flex-start; overflow-y: auto; }
+  .redes { grid-template-columns: 1fr; gap: 28px; }
+  .redes-titulo img { width: min(100%, 320px); }
+  .redes-lista { gap: 20px; }
+  .redes-lista a { font-size: 12px; gap: 12px; }
+  .rede-icone { width: 30px; height: 30px; }
   .contato-titulo img { width: min(100%, 340px); }
   .copiar { margin-top: 16px; gap: 8px 16px; }
   .copiar-email { font-size: 13px; }
