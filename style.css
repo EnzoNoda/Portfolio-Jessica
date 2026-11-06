@@ -346,6 +346,76 @@ body.escuro .logos img { filter: invert(1); }
 .tags { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
 .tags li { border: 1.5px solid currentColor; border-radius: 999px; padding: .2em .9em; font-size: 15px; font-weight: 600; }
 
+/* ---------- Sobre (página com rolagem) ---------- */
+.sobre-miolo {
+  display: block;
+  max-width: none;
+  margin-top: var(--topo-h);
+  height: calc(100% - var(--topo-h));
+  padding: clamp(12px, 3vh, 32px) var(--lateral) 64px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--roxo) transparent;
+  /* o conteúdo some suavemente ao passar por baixo do menu */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 28px);
+}
+.sobre-miolo::-webkit-scrollbar { width: 6px; }
+.sobre-miolo::-webkit-scrollbar-thumb { background: var(--roxo); border-radius: 999px; }
+.sobre { max-width: 1680px; margin: 0 auto; }
+
+.sobre-hero {
+  display: grid;
+  grid-template-columns: .8fr 1fr;
+  align-items: center;
+  gap: clamp(24px, 4vw, 72px);
+}
+.sobre-retrato img { width: auto; max-width: 100%; max-height: calc(100vh - var(--topo-h) - 80px); height: auto; margin: 0 auto; }
+.sobre-intro { padding-top: clamp(8px, 4vh, 40px); }
+.sobre-titulo { outline: none; }
+.sobre-titulo img { width: min(100%, clamp(300px, 24vw, 440px)); height: auto; margin-left: -6px; }
+body.escuro .sobre-titulo img,
+body.escuro .sobre-fim img { filter: invert(1) hue-rotate(180deg) brightness(1.15); }
+
+.sobre-texto { font-size: clamp(14px, 1vw, 17px); font-weight: 700; line-height: 1.6; }
+.sobre-texto em { font-style: normal; color: var(--destaque); }
+.sobre-intro .sobre-texto { margin: 14px 0 22px; }
+
+/* fotos com bordas arredondadas, no padrão do site */
+.foto { margin: 0; }
+.foto img {
+  display: block;
+  width: 100%;
+  height: var(--h, auto);
+  object-fit: cover;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--texto) 8%, var(--fundo));
+  box-shadow: 0 2px 4px rgba(0,0,0,.06), 0 10px 24px -14px rgba(0,0,0,.35);
+}
+.foto-formatura img { aspect-ratio: 3 / 2; height: auto; max-height: calc(100vh - var(--topo-h) - 330px); min-height: 260px; }
+.foto figcaption { margin-top: 12px; display: flex; flex-direction: column; gap: 4px; }
+.foto figcaption strong { font-size: clamp(12px, .85vw, 14px); font-weight: 700; }
+.foto figcaption span { font-size: clamp(11px, .75vw, 13px); font-weight: 500; opacity: .6; }
+
+.sobre-bloco { margin-top: clamp(56px, 10vh, 96px); }
+.sobre-bloco > .sobre-texto { margin-bottom: 22px; }
+
+.fotos { display: grid; gap: clamp(16px, 2.4vw, 28px); align-items: start; }
+.fotos-carimba  { grid-template-columns: 1.75fr 1fr; --h: clamp(220px, 27vw, 560px); }
+.fotos-vw       { grid-template-columns: .9fr 1fr .85fr; --h: clamp(240px, 27vw, 560px); }
+.fotos-viseu    { grid-template-columns: 1.55fr 1fr; --h: clamp(240px, 30vw, 620px); }
+.fotos-mestrado { grid-template-columns: 1.3fr 1fr; --h: clamp(240px, 30vw, 620px); }
+.sobre-textos { display: flex; flex-direction: column; gap: 28px; align-self: center; }
+
+.sobre-fim { display: flex; justify-content: center; margin-top: clamp(64px, 12vh, 120px); }
+.sobre-fim img { width: min(100%, clamp(300px, 24vw, 440px)); height: auto; }
+
+/* aparece ao rolar */
+.revela { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.revela.visivel { opacity: 1; transform: none; }
+.pagina.aberta .sobre-hero { animation: subir .8s var(--ease) .3s both; }
+
 /* ---------- Projetos ---------- */
 .projetos-miolo { max-width: none; }
 .projetos-rolagem { padding: 0 6px 24px; margin: 0 -6px; }
@@ -750,6 +820,13 @@ body.menu-aberto .logo img { filter: brightness(0) invert(.95); }
   .logos img { height: calc(var(--h, 1) * 15px); }
 
   .grade-projetos { grid-template-columns: 1fr; }
+  .sobre-hero { grid-template-columns: 1fr; gap: 8px; }
+  .sobre-retrato img { max-width: 240px; }
+  .sobre-intro { padding-top: 0; }
+  .fotos-carimba, .fotos-vw, .fotos-viseu, .fotos-mestrado { grid-template-columns: 1fr; --h: auto; }
+  .fotos .foto img { aspect-ratio: 4 / 3; }
+  .fotos-vw .foto:last-child img { aspect-ratio: 3 / 4; }
+  .sobre-bloco { margin-top: 48px; }
   .projetos-titulo img { width: min(100%, 330px); }
   .filtros { gap: 8px; }
   .filtro { font-size: 12px; padding: 4px 11px; }

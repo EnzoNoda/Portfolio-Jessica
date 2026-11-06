@@ -73,6 +73,8 @@ function abrirPagina(nome, p) {
   nova.style.zIndex = ++camada;
   nova.inert = false;
   nova.classList.add('aberta');
+  var rolagem = nova.querySelector('[data-rolagem]');
+  if (rolagem) rolagem.scrollTop = 0;
 
   var tempo = semMovimento.matches ? 1 : 900;
   if (nova.animate) {
@@ -237,6 +239,23 @@ var textos = {
     verBehance: 'Ver no Behance', fecharProjeto: 'Fechar projeto', abrirProjeto: 'Abrir projeto',
     embedTexto: 'O projeto completo, com todas as imagens, está no Behance.',
     designerAlt: 'Designer gráfica, editorial, de identidade visual, de interface e de produto',
+    altRetrato: 'Jessica de beca, sentada numa cadeira, segurando o canudo do diploma',
+    altOla: 'Olá, eu sou a Jessica: designer, mestranda e pesquisadora',
+    altMaisDoQue: 'Mais do que experiências, repertório para criar o novo',
+    sobreP1: 'Sou <em>bacharel</em> em design pela Universidade Estadual de Maringá - <em>UEM</em>',
+    capFormatura: 'Colação de grau', metaFormatura: 'Design | UEM',
+    sobreP2: 'Durante a graduação, participei de diferentes iniciativas acadêmicas, como a <em>Carimba</em>, empresa júnior de design da UEM, onde atuei tanto como assessora quanto como gestora de projetos.',
+    capFlorescer: 'Florescer - Noroeste Júnior', metaFlorescer: '2022 | Encontro de Empreendedorismo das Empresas Juniores do Noroeste do Paraná',
+    capParana: 'Paraná Júnior', metaParana: '2022 | Encontro de Empreendedorismo das Empresas Juniores do Paraná',
+    sobreP3: 'Paralelamente, participei da revista <em>ZigueZague</em>, vinculada aos cursos de Design e Moda da UEM, e do movimento estudantil. Também adquiri experiência profissional por meio de estágios na área de design, inicialmente na <em>NODA</em> e, posteriormente, em branding e social media, na <em>Amanda Tambara</em>.',
+    sobreP4: 'Em 2022, fui <em>semifinalista</em> do <em>Concurso Talento Volkswagen Design</em>, na categoria <em>Color &amp; Trim</em>, experiência que também me proporcionou a oportunidade de conhecer a fábrica da Volkswagen, em São Bernardo do Campo (SP).',
+    capVw1: 'Alunos semifinalistas da UEM e ex-alunos que atuavam como designers na Volkswagen',
+    capVw2: 'Alunos da UEM semifinalistas', metaVw: '2022 | Concurso Talento Volkswagen Design',
+    sobreP5: 'Atualmente, atuo como designer editorial na <em>Editora Viseu</em>, desenvolvendo capas, realizando a diagramação do conteúdo interno das obras, produzindo ilustrações e materiais complementares.',
+    capViseu: 'Editora Viseu', metaViseuEquipe: '2025 | Equipe', metaViseuEu: '2026 | Eu',
+    sobreP6: 'Paralelamente, curso o <em>Mestrado</em> em <em>Design e Interfaces</em> na <em>UEM</em>, sob orientação da Prof.ª Dr.ª Cláudia C. F. Monteiro. Minha pesquisa investiga a gamificação como interface cognitiva em ambientes educacionais digitais, com foco na autonomia e na fadiga dos usuários.',
+    capMestrado: 'Apresentação final da disciplina - Mestrado',
+    metaMestrado1: '2026 | Metodologia de Projeto de Pesquisa', metaMestrado2: '2026 | Design Centrado no Usuário',
     meEncontre: 'Me encontre nas redes', vamosConversar: 'Vamos conversar?', cliqueCopiar: 'Clique para copiar!', copiado: 'Email copiado!',
     formTitulo: 'Ou escreva uma mensagem abaixo', nome: 'Nome', mensagem: 'Mensagem',
     phNome: 'Maria Santos', phMensagem: 'Escreva a sua mensagem aqui...',
@@ -268,6 +287,23 @@ var textos = {
     verBehance: 'View on Behance', fecharProjeto: 'Close project', abrirProjeto: 'Open project',
     embedTexto: 'The full project, with all the images, is on Behance.',
     designerAlt: 'Editorial, brand, graphic, UI/UX and product designer',
+    altRetrato: 'Jessica in her graduation gown, sitting on a chair, holding her diploma',
+    altOla: "Hi, I'm Jessica: designer, master's student and researcher",
+    altMaisDoQue: 'More than experiences, a repertoire to create the new',
+    sobreP1: "I hold a <em>bachelor's degree</em> in design from the State University of Maringá - <em>UEM</em>",
+    capFormatura: 'Graduation ceremony', metaFormatura: 'Design | UEM',
+    sobreP2: "During my degree, I took part in different academic initiatives, such as <em>Carimba</em>, UEM's junior design company, where I worked both as an advisor and as a project manager.",
+    capFlorescer: 'Florescer - Noroeste Júnior', metaFlorescer: '2022 | Entrepreneurship Meeting of the Junior Companies of Northwest Paraná',
+    capParana: 'Paraná Júnior', metaParana: '2022 | Entrepreneurship Meeting of the Junior Companies of Paraná',
+    sobreP3: "At the same time, I took part in <em>ZigueZague</em> magazine, linked to UEM's Design and Fashion programs, and in the student movement. I also gained professional experience through design internships, first at <em>NODA</em> and later in branding and social media at <em>Amanda Tambara</em>.",
+    sobreP4: 'In 2022, I was a <em>semifinalist</em> in the <em>Volkswagen Design Talent Contest</em>, in the <em>Color &amp; Trim</em> category, an experience that also gave me the chance to visit the Volkswagen factory in São Bernardo do Campo (SP).',
+    capVw1: 'UEM semifinalists and alumni working as designers at Volkswagen',
+    capVw2: 'UEM semifinalists', metaVw: '2022 | Volkswagen Design Talent Contest',
+    sobreP5: "Today, I work as an editorial designer at <em>Editora Viseu</em>, designing covers, laying out the books' interior content, and producing illustrations and supporting materials.",
+    capViseu: 'Editora Viseu', metaViseuEquipe: '2025 | Team', metaViseuEu: '2026 | Me',
+    sobreP6: "In parallel, I'm pursuing a <em>Master's</em> in <em>Design and Interfaces</em> at <em>UEM</em>, advised by Prof. Dr. Cláudia C. F. Monteiro. My research investigates gamification as a cognitive interface in digital learning environments, focusing on users' autonomy and fatigue.",
+    capMestrado: "Final course presentation - Master's",
+    metaMestrado1: '2026 | Research Project Methodology', metaMestrado2: '2026 | User-Centered Design',
     meEncontre: 'Find me on social media', vamosConversar: "Let's talk?", cliqueCopiar: 'Click to copy!', copiado: 'Email copied!',
     formTitulo: 'Or write a message below', nome: 'Name', mensagem: 'Message',
     phNome: 'Maria Santos', phMensagem: 'Write your message here...',
@@ -488,6 +524,23 @@ if (pmodal) {
 }
 
 renderProjetos();
+
+/* ================= SOBRE: blocos aparecem ao rolar ================= */
+(function () {
+  var blocos = document.querySelectorAll('.revela');
+  if (!blocos.length) return;
+  if (semMovimento.matches || !('IntersectionObserver' in window)) {
+    blocos.forEach(function (b) { b.classList.add('visivel'); });
+    return;
+  }
+  var raiz = document.querySelector('.sobre-miolo');
+  var obs = new IntersectionObserver(function (itens) {
+    itens.forEach(function (it) {
+      if (it.isIntersecting) { it.target.classList.add('visivel'); obs.unobserve(it.target); }
+    });
+  }, { root: raiz, threshold: 0.12 });
+  blocos.forEach(function (b) { obs.observe(b); });
+})();
 
 /* ================= FALE COMIGO ================= */
 /* Copiar email */
