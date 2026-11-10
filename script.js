@@ -205,6 +205,10 @@ function ler(chave) { try { return localStorage.getItem(chave); } catch (e) { re
 
 function aplicarTema(escuro) {
   document.body.classList.toggle('escuro', escuro);
+  document.querySelectorAll('[data-src-escuro]').forEach(function (img) {
+    var v = img.getAttribute(escuro ? 'data-src-escuro' : 'data-src-claro');
+    if (v && img.getAttribute('src') !== v) img.setAttribute('src', v);
+  });
   var t = textos[idioma];
   btnTema.setAttribute('aria-label', escuro ? t.temaClaro : t.temaEscuro);
   btnTema.title = escuro ? t.temaClaro : t.temaEscuro;
@@ -256,7 +260,10 @@ var textos = {
     sobreP6: 'Paralelamente, curso o <em>Mestrado</em> em <em>Design e Interfaces</em> na <em>UEM</em>, sob orientação da Prof.ª Dr.ª Cláudia C. F. Monteiro. Minha pesquisa investiga a gamificação como interface cognitiva em ambientes educacionais digitais, com foco na autonomia e na fadiga dos usuários.',
     capMestrado: 'Apresentação final da disciplina - Mestrado',
     metaMestrado1: '2026 | Metodologia de Projeto de Pesquisa', metaMestrado2: '2026 | Design Centrado no Usuário',
-    meEncontre: 'Me encontre nas redes', vamosConversar: 'Vamos conversar?', cliqueCopiar: 'Clique para copiar!', copiado: 'Email copiado!',
+    meEncontre: 'Me encontre nas redes',
+    cvCargo: 'Designer Gráfica e Editorial · Branding e Identidade Visual · UX/UI Design', cvBaixar: 'Ver currículo em PDF', verCertificado: 'Ver certificado', abrirImagem: 'Abrir em nova aba',
+    servicos: 'Serviços', svCapas: 'Criação de capas', svCartazes: 'Cartazes e flyers', svLogotipos: 'Logotipos',
+    svDiagramacao: 'Diagramação de livros, revistas e catálogos', svApresentacoes: 'Apresentações institucionais', svIdentidade: 'Identidade visual', vamosConversar: 'Vamos conversar?', cliqueCopiar: 'Clique para copiar!', copiado: 'Email copiado!',
     formTitulo: 'Ou escreva uma mensagem abaixo', nome: 'Nome', mensagem: 'Mensagem',
     phNome: 'Maria Santos', phMensagem: 'Escreva a sua mensagem aqui...',
     enviar: 'Enviar', enviando: 'Enviando...', enviado: 'Mensagem enviada! Obrigada, respondo em breve.',
@@ -288,7 +295,7 @@ var textos = {
     embedTexto: 'The full project, with all the images, is on Behance.',
     designerAlt: 'Editorial, brand, graphic, UI/UX and product designer',
     altRetrato: 'Jessica in her graduation gown, sitting on a chair, holding her diploma',
-    altOla: "Hi, I'm Jessica: designer, master's student and researcher",
+    altOla: "Hello, I'm Jessica: designer, master's student and researcher",
     altMaisDoQue: 'More than experiences, a repertoire to create the new',
     sobreP1: "I hold a <em>bachelor's degree</em> in design from the State University of Maringá - <em>UEM</em>",
     capFormatura: 'Graduation ceremony', metaFormatura: 'Design | UEM',
@@ -304,7 +311,10 @@ var textos = {
     sobreP6: "In parallel, I'm pursuing a <em>Master's</em> in <em>Design and Interfaces</em> at <em>UEM</em>, advised by Prof. Dr. Cláudia C. F. Monteiro. My research investigates gamification as a cognitive interface in digital learning environments, focusing on users' autonomy and fatigue.",
     capMestrado: "Final course presentation - Master's",
     metaMestrado1: '2026 | Research Project Methodology', metaMestrado2: '2026 | User-Centered Design',
-    meEncontre: 'Find me on social media', vamosConversar: "Let's talk?", cliqueCopiar: 'Click to copy!', copiado: 'Email copied!',
+    meEncontre: 'Find me on social media',
+    cvCargo: 'Graphic & Editorial Designer · Branding & Visual Identity · UX/UI Design', cvBaixar: 'View resume as PDF', verCertificado: 'View certificate', abrirImagem: 'Open in new tab',
+    servicos: 'Services', svCapas: 'Book cover design', svCartazes: 'Posters and flyers', svLogotipos: 'Logos',
+    svDiagramacao: 'Layout for books, magazines and catalogs', svApresentacoes: 'Corporate presentations', svIdentidade: 'Visual identity', vamosConversar: "Let's talk?", cliqueCopiar: 'Click to copy!', copiado: 'Email copied!',
     formTitulo: 'Or write a message below', nome: 'Name', mensagem: 'Message',
     phNome: 'Maria Santos', phMensagem: 'Write your message here...',
     enviar: 'Send', enviando: 'Sending...', enviado: "Message sent! Thank you, I'll reply soon.",
@@ -343,6 +353,7 @@ function aplicarIdioma(novo) {
     var v = el.getAttribute('data-src-' + novo); if (v && el.getAttribute('src') !== v) el.setAttribute('src', v);
   });
   if (typeof renderProjetos === 'function') renderProjetos();
+  if (typeof renderCurriculo === 'function') renderCurriculo();
   document.getElementById('sigla-idioma').textContent = t.siglaOutro;
   btnIdioma.setAttribute('aria-label', t.trocarIdioma);
   btnIdioma.title = t.tituloIdioma;
@@ -406,8 +417,16 @@ function iframeBehance(id, titulo) {
   f.setAttribute('allow', 'clipboard-write');
   f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
   f.setAttribute('allowfullscreen', '');
+  f.setAttribute('scrolling', 'no'); // sem barra de rolagem dentro do embed
   return f;
 }
+
+/* o embed do Behance tem 404x316: desenha nesse tamanho e amplia até preencher o card */
+var escalaCapas = window.ResizeObserver ? new ResizeObserver(function (itens) {
+  itens.forEach(function (it) {
+    it.target.style.setProperty('--escala', it.contentRect.width / 404);
+  });
+}) : null;
 
 function renderProjetos() {
   if (!gradeProjetos) return;
@@ -426,7 +445,11 @@ function renderProjetos() {
     var img = document.createElement('img');
     img.alt = '';
     img.loading = 'lazy';
-    img.onerror = function () { capa.replaceChild(iframeBehance(p.id, titulo), img); };
+    img.onerror = function () {
+      capa.replaceChild(iframeBehance(p.id, titulo), img);
+      capa.classList.add('com-embed');
+      if (escalaCapas) escalaCapas.observe(capa);
+    };
     img.src = p.capa || '';
     if (!p.capa) img.onerror();
     capa.appendChild(img);
@@ -475,6 +498,7 @@ function abrirModalProjeto(i, origem) {
   document.getElementById('pmodal-titulo').textContent = titulo;
   document.getElementById('pmodal-meta').textContent = p.meta || '';
   document.getElementById('pmodal-behance').href = urlBehance(p.id);
+  document.querySelector('#pmodal-behance span').textContent = textos[idioma].verBehance;
 
   pmodalCorpo.innerHTML = '';
   if (p.imagens && p.imagens.length) {
@@ -541,6 +565,159 @@ renderProjetos();
   }, { root: raiz, threshold: 0.12 });
   blocos.forEach(function (b) { obs.observe(b); });
 })();
+
+/* ================= CURRÍCULO ================= */
+/* Conteúdo do currículo (PDF de novembro/2026). Para editar, mude os textos abaixo. */
+var curriculo = {
+  pt: {
+    resumo: 'Designer gráfica bacharel em Design pela Universidade Estadual de Maringá (UEM), com experiência em design editorial, diagramação, criação de capas, ilustração, identidade visual e branding. Atua como designer gráfica na Editora Viseu, desenvolvendo projetos gráficos de livros, fechamento de arquivos para impressão e materiais de divulgação para lançamentos. Experiência anterior em estágios de branding e design gráfico, com criação de logotipos, layouts de sites e conteúdo para redes sociais, além de liderança de equipes em empresa júnior. Mestranda em Design e Interfaces (UEM) e em formação contínua em UX/UI Design.',
+    titulos: { exp: 'experiência profissional', acad: 'experiência acadêmica', form: 'formação', comp: 'competências', idiomas: 'idiomas', cert: 'certificações e cursos', areas: 'Áreas', ferramentas: 'Ferramentas' },
+    experiencia: [
+      { cargo: 'Designer Gráfica', local: 'Editora Viseu', data: 'Julho de 2024 – Atual', atual: true, itens: [
+        'Diagramação e projeto gráfico de livros no Adobe InDesign, garantindo consistência tipográfica e padrão editorial.',
+        'Criação de capas, ilustrações, tabelas e elementos gráficos alinhados ao gênero e ao público de cada obra.',
+        'Tratamento e edição de imagens no Adobe Photoshop.',
+        'Preparação e fechamento de arquivos para impressão gráfica (pré-impressão).',
+        'Materiais complementares e de divulgação, como marca-páginas, vídeos promocionais e artes para lançamentos e redes sociais.' ] },
+      { cargo: 'Estagiária de Branding', local: 'Amanda Tambara', data: 'Fevereiro de 2024 – Maio de 2024', itens: [
+        'Criação de artes gráficas e edição de vídeos para redes sociais de contas empresariais.',
+        'Aplicação do planejamento de DNA de marca e identidade visual na produção de conteúdo, garantindo consistência entre os canais.' ] },
+      { cargo: 'Estagiária de Design Gráfico', local: 'E Noda Ltda.', data: 'Dezembro de 2023 – Fevereiro de 2024', itens: [
+        'Layout de site (web design), logotipo e ilustrações para a marca.' ] },
+      { cargo: 'Diretora de Projetos', local: 'Carimba Design (Empresa Júnior de Design da UEM)', data: 'Março de 2022 – Setembro de 2022', itens: [
+        'Coordenação de equipes de design na execução de projetos para clientes reais.',
+        'Identidades visuais, materiais gráficos de branding, design de embalagens e projeto de design editorial.' ] },
+      { cargo: 'Assessora de Projetos', local: 'Carimba Design (Empresa Júnior de Design da UEM)', data: 'Abril de 2021 – Março de 2022', itens: [
+        'Identidades visuais, naming e materiais gráficos para branding de clientes.' ] }
+    ],
+    academica: [
+      { cargo: 'Administração de Cadastros', local: 'Revista Ziguezague · Design & Moda UEM', data: 'Abril de 2023 – Novembro de 2023', itens: [ 'Gestão de dados dos membros da equipe.' ] },
+      { cargo: 'Assessora de Redação', local: 'Revista Ziguezague · Design & Moda UEM', data: 'Dezembro de 2022 – Março de 2023', itens: [ 'Produção de conteúdo publicitário, copywriting, revisão e aprimoramento de textos.' ] },
+      { cargo: 'Assessora de Marketing', local: 'Revista Ziguezague · Design & Moda UEM', data: 'Fevereiro de 2022 – Novembro de 2022', itens: [ 'Pesquisa de tendências de design e moda.' ] }
+    ],
+    formacao: [
+      { t: 'Mestrado em Design e Interfaces', s: 'UEM · Março de 2026 – Atual' },
+      { t: 'Bacharelado em Design', s: 'UEM · Agosto de 2020 – Maio de 2024' }
+    ],
+    areas: ['Design Gráfico', 'Design Editorial', 'Diagramação', 'Projeto Gráfico', 'Criação de Capas', 'Ilustração', 'Identidade Visual', 'Branding', 'Criação de Logotipo', 'Naming', 'Design de Embalagens', 'Tipografia', 'Tratamento de Imagens', 'Pré-impressão', 'Social Media', 'Edição de Vídeo', 'Motion Design', 'Web Design', 'UX/UI Design', 'Prototipação', 'Gestão de Equipes'],
+    idiomas: [ { t: 'Português', s: 'Nativo' }, { t: 'Inglês', s: 'Intermediário (B1)' } ],
+    cert: [
+      { t: 'Certificado de Proficiência em Inglês', s: 'Duolingo English Test · Intermediário (B1) · 2026', img: 'imagens/certificados/duolingo-ingles.webp' },
+      { t: 'Workshop UX/UI Design: será que é pra mim?', s: 'EBAC · 4 horas · 2026', img: 'imagens/certificados/ebac-ux-ui.webp' },
+      { t: 'Resiliência', s: 'Fundação Bradesco – Escola Virtual · 4 horas · 2025', img: 'imagens/certificados/bradesco-resiliencia.webp' },
+      { t: 'Produção e Edição de Vídeo pelo Celular', s: 'Enap – Escola Nacional de Administração Pública · 20 horas · 2025', img: 'imagens/certificados/enap-video.webp' },
+      { t: 'Cursos de UX/UI Design', s: 'Udemy · em andamento' }
+    ]
+  },
+  en: {
+    resumo: "Graphic designer with a bachelor's degree in Design from the State University of Maringá (UEM), experienced in editorial design, layout, book covers, illustration, visual identity and branding. Works as a graphic designer at Editora Viseu, creating book designs, preparing print-ready files and producing promotional materials for book launches. Previous internships in branding and graphic design, creating logos, website layouts and social media content, plus team leadership at a junior company. Master's student in Design and Interfaces (UEM), continuously studying UX/UI Design.",
+    titulos: { exp: 'work experience', acad: 'academic experience', form: 'education', comp: 'skills', idiomas: 'languages', cert: 'certificates and courses', areas: 'Areas', ferramentas: 'Tools' },
+    experiencia: [
+      { cargo: 'Graphic Designer', local: 'Editora Viseu', data: 'July 2024 – Present', atual: true, itens: [
+        'Book layout and graphic design in Adobe InDesign, ensuring typographic consistency and editorial standards.',
+        'Covers, illustrations, tables and graphic elements tailored to each book’s genre and audience.',
+        'Image editing and retouching in Adobe Photoshop.',
+        'Preparing and finalizing print-ready files (prepress).',
+        'Supporting and promotional materials such as bookmarks, promo videos and artwork for launches and social media.' ] },
+      { cargo: 'Branding Intern', local: 'Amanda Tambara', data: 'February 2024 – May 2024', itens: [
+        'Graphic artwork and video editing for business social media accounts.',
+        'Applied brand DNA and visual identity planning to content production, keeping channels consistent.' ] },
+      { cargo: 'Graphic Design Intern', local: 'E Noda Ltda.', data: 'December 2023 – February 2024', itens: [
+        'Website layout (web design), logo and illustrations for the brand.' ] },
+      { cargo: 'Project Director', local: 'Carimba Design (UEM Junior Design Company)', data: 'March 2022 – September 2022', itens: [
+        'Led design teams delivering projects for real clients.',
+        'Visual identities, branding materials, packaging design and an editorial design project.' ] },
+      { cargo: 'Project Advisor', local: 'Carimba Design (UEM Junior Design Company)', data: 'April 2021 – March 2022', itens: [
+        'Visual identities, naming and branding materials for clients.' ] }
+    ],
+    academica: [
+      { cargo: 'Membership Administration', local: 'Ziguezague Magazine · UEM Design & Fashion', data: 'April 2023 – November 2023', itens: [ 'Managed team members’ records.' ] },
+      { cargo: 'Editorial Assistant', local: 'Ziguezague Magazine · UEM Design & Fashion', data: 'December 2022 – March 2023', itens: [ 'Advertising content, copywriting, proofreading and text editing.' ] },
+      { cargo: 'Marketing Assistant', local: 'Ziguezague Magazine · UEM Design & Fashion', data: 'February 2022 – November 2022', itens: [ 'Research on design and fashion trends.' ] }
+    ],
+    formacao: [
+      { t: "Master's in Design and Interfaces", s: 'UEM · March 2026 – Present' },
+      { t: "Bachelor's in Design", s: 'UEM · August 2020 – May 2024' }
+    ],
+    areas: ['Graphic Design', 'Editorial Design', 'Layout', 'Book Design', 'Book Covers', 'Illustration', 'Visual Identity', 'Branding', 'Logo Design', 'Naming', 'Packaging Design', 'Typography', 'Image Editing', 'Prepress', 'Social Media', 'Video Editing', 'Motion Design', 'Web Design', 'UX/UI Design', 'Prototyping', 'Team Management'],
+    idiomas: [ { t: 'Portuguese', s: 'Native' }, { t: 'English', s: 'Intermediate (B1)' } ],
+    cert: [
+      { t: 'English Proficiency Certificate', s: 'Duolingo English Test · Intermediate (B1) · 2026', img: 'imagens/certificados/duolingo-ingles.webp' },
+      { t: 'Workshop “UX/UI Design: is it for me?”', s: 'EBAC · 4 hours · 2026', img: 'imagens/certificados/ebac-ux-ui.webp' },
+      { t: 'Resilience', s: 'Fundação Bradesco – Escola Virtual · 4 hours · 2025', img: 'imagens/certificados/bradesco-resiliencia.webp' },
+      { t: 'Video Production and Editing on Mobile', s: 'Enap – Brazilian National School of Public Administration · 20 hours · 2025', img: 'imagens/certificados/enap-video.webp' },
+      { t: 'UX/UI Design courses', s: 'Udemy · in progress' }
+    ]
+  }
+};
+var ferramentasCv = ['Adobe Illustrator', 'Adobe InDesign', 'Adobe Photoshop', 'Adobe Premiere Pro', 'Adobe After Effects', 'Figma'];
+
+function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+function renderCurriculo() {
+  var alvo = document.getElementById('cv-conteudo');
+  if (!alvo) return;
+  var c = curriculo[idioma] || curriculo.pt, T = c.titulos;
+  function tempo(lista) {
+    return '<ol class="cv-tempo">' + lista.map(function (e) {
+      return '<li class="cv-item' + (e.atual ? ' atual' : '') + '"><p class="cv-data">' + esc(e.data) + '</p>' +
+        '<h4>' + esc(e.cargo) + '</h4><p class="cv-local-item">' + esc(e.local) + '</p>' +
+        '<ul>' + e.itens.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul></li>';
+    }).join('') + '</ol>';
+  }
+  function lista(l, grupo) {
+    return '<ul class="cv-lista">' + l.map(function (x, i) {
+      var miolo = '<strong>' + esc(x.t) + '</strong><span>' + esc(x.s) + '</span>';
+      if (!x.img && grupo === 'cert') return '<li><div class="cv-cert cv-cert-sem"><span class="cv-cert-texto">' + miolo + '</span></div></li>';
+      if (!x.img) return '<li>' + miolo + '</li>';
+      return '<li><button type="button" class="cv-cert" data-i="' + i + '">' +
+        '<span class="cv-cert-texto">' + miolo + '</span>' +
+        '<span class="cv-cert-ver">' + esc(textos[idioma].verCertificado) + '</span></button></li>';
+    }).join('') + '</ul>';
+  }
+  function tags(l, cls) { return '<ul class="cv-tags' + (cls ? ' ' + cls : '') + '">' + l.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>'; }
+  alvo.innerHTML =
+    '<p class="cv-resumo">' + esc(c.resumo) + '</p>' +
+    '<div class="cv-grade">' +
+      '<div>' +
+        '<section class="cv-secao"><h3>' + T.exp + '</h3>' + tempo(c.experiencia) + '</section>' +
+        '<section class="cv-secao"><h3>' + T.acad + '</h3>' + tempo(c.academica) + '</section>' +
+      '</div>' +
+      '<aside>' +
+        '<section class="cv-secao"><h3>' + T.form + '</h3>' + lista(c.formacao) + '</section>' +
+        '<section class="cv-secao"><h3>' + T.comp + '</h3><p class="cv-sub">' + T.ferramentas + '</p>' + tags(ferramentasCv, 'cheias') +
+          '<p class="cv-sub">' + T.areas + '</p>' + tags(c.areas) + '</section>' +
+        '<section class="cv-secao"><h3>' + T.idiomas + '</h3>' + lista(c.idiomas) + '</section>' +
+        '<section class="cv-secao"><h3>' + T.cert + '</h3>' + lista(c.cert, 'cert') + '</section>' +
+      '</aside>' +
+    '</div>';
+  alvo.querySelectorAll('.cv-cert').forEach(function (b) {
+    b.addEventListener('click', function () { abrirModalImagem(c.cert[+b.dataset.i], b); });
+  });
+}
+
+/* modal com a imagem do certificado (reaproveita o modal dos projetos) */
+function abrirModalImagem(item, origem) {
+  origemModal = origem || null;
+  document.getElementById('pmodal-titulo').textContent = item.t;
+  document.getElementById('pmodal-meta').textContent = item.s;
+  var link = document.getElementById('pmodal-behance');
+  link.href = item.img;
+  link.querySelector('span').textContent = textos[idioma].abrirImagem;
+  pmodalCorpo.innerHTML = '';
+  var bloco = document.createElement('div');
+  bloco.className = 'pmodal-certificado';
+  var img = document.createElement('img');
+  img.src = item.img; img.alt = item.t;
+  bloco.appendChild(img);
+  pmodalCorpo.appendChild(bloco);
+  pmodalCorpo.scrollTop = 0;
+  pmodal.classList.remove('fechando');
+  pmodal.hidden = false;
+  document.body.classList.add('modal-aberto');
+  setTimeout(function () { pmodal.querySelector('.pmodal-painel').focus({ preventScroll: true }); }, 50);
+}
+renderCurriculo();
 
 /* ================= FALE COMIGO ================= */
 /* Copiar email */

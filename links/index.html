@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jessica Deart — Links</title>
+  <meta name="description" content="Jessica Deart, designer. Portfólio, Behance, Instagram, LinkedIn e contato.">
+  <meta name="theme-color" content="#F2F2F2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --roxo: #6040C5;
+      --branco: #F2F2F2;
+      --marinho: #211D5D;
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { background: var(--branco); }
+    body {
+      font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+      background: var(--branco);
+      color: var(--marinho);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+    img { display: block; max-width: 100%; }
+
+    .pagina {
+      width: 100%;
+      max-width: 480px;
+      padding: 32px 22px 48px;
+    }
+
+    /* ---------- Topo ---------- */
+    .foto {
+      width: min(86%, 380px);
+      margin: 0 auto;
+      animation: surgir 1.1s var(--ease) both;
+    }
+    .ola {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      margin-top: 12px;
+      animation: subir .8s var(--ease) .2s both;
+    }
+    .sorriso { width: 22px; height: 22px; color: var(--roxo); transform: rotate(18deg); }
+    .titulo-gif {
+      width: min(100%, 360px);
+      margin: 6px 0 0 -4px;
+      animation: subir .8s var(--ease) .3s both;
+    }
+    .frase {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.55;
+      margin-top: 10px;
+      animation: subir .8s var(--ease) .4s both;
+    }
+    .frase em { font-style: normal; color: var(--roxo); }
+    .circulada { position: relative; color: var(--roxo); white-space: nowrap; margin: 0 .3em; }
+    .circulada svg {
+      position: absolute;
+      left: -11%; top: -36%;
+      width: 122%; height: 172%;
+      stroke-dasharray: 360;
+      stroke-dashoffset: 360;
+      animation: desenhar 1.2s var(--ease) 1.1s forwards;
+      pointer-events: none;
+    }
+
+    /* ---------- Redes ---------- */
+    .redes { margin-top: 44px; }
+    .redes-titulo {
+      font-size: clamp(16px, 5.3vw, 26px);
+      white-space: nowrap;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.08;
+      letter-spacing: -.01em;
+    }
+
+    .links { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 22px; }
+    .links a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 62px;
+      padding: 10px 64px;
+      border: 2px solid var(--roxo);
+      border-radius: 999px;
+      color: var(--marinho);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      background: transparent;
+      transition: background .3s, color .3s, transform .35s var(--ease), box-shadow .35s var(--ease);
+      animation: subir .7s var(--ease) both;
+      animation-delay: calc(.6s + var(--i) * .07s);
+    }
+    .icone {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--marinho);
+      color: var(--branco);
+      display: grid;
+      place-items: center;
+      transition: background .3s, transform .35s var(--ease);
+    }
+    .icone svg { width: 22px; height: 22px; }
+    .links a:hover,
+    .links a:focus-visible {
+      background: var(--roxo);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px -12px rgba(96, 64, 197, .7);
+      outline: none;
+    }
+    .links a:hover .icone,
+    .links a:focus-visible .icone { background: #fff; color: var(--roxo); transform: translateY(-50%) rotate(-10deg); }
+    .links a:active { transform: scale(.98); }
+
+    .rodape { margin-top: 36px; text-align: center; font-size: 12px; font-weight: 600; opacity: .55; }
+
+    @keyframes subir { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @keyframes surgir { from { opacity: 0; transform: scale(.88) rotate(-5deg); } to { opacity: 1; transform: none; } }
+    @keyframes desenhar { to { stroke-dashoffset: 0; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+      .circulada svg { stroke-dashoffset: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="pagina">
+
+    <header>
+      <img class="foto" src="../imagens/foto.webp" alt="Foto da Jessica de capelo, sobre uma estrela de bolinhas roxas">
+
+      <p class="ola">
+        Olá, eu sou a Jessica
+        <svg class="sorriso" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.7"/><path d="M8.3 13.6c1.9 2.4 5.5 2.4 7.4 0"/></g><circle cx="9.2" cy="9.6" r="1.45" fill="currentColor"/><circle cx="14.8" cy="9.6" r="1.45" fill="currentColor"/></svg>
+      </p>
+
+      <h1><img class="titulo-gif" src="../imagens/designer-pt.webp" alt="Designer gráfica, editorial, de identidade visual, de interface e de produto"></h1>
+
+      <p class="frase">
+        Transformo <em>sonhos</em> em <span class="circulada">soluções<svg viewBox="0 0 120 44" preserveAspectRatio="none" aria-hidden="true"><path d="M30 40C12 38 4 31 6 22 9 10 34 4 62 4c30 0 52 8 52 19 0 11-24 17-54 17C34 40 14 35 9 27" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span> visuais criativas, acessíveis, funcionais e estratégicas!
+      </p>
+    </header>
+
+    <section class="redes" aria-labelledby="t-redes">
+      <h2 class="redes-titulo" id="t-redes">Me encontre nas redes</h2>
+
+      <ul class="links">
+        <li><a href="../" style="--i:0">
+          <span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4.5 8.5h15v10h-15z"/><path d="M9 8.5V6.5h6v2"/><path d="M4.5 12.5h15"/></g></svg></span>
+          Portfólio
+        </a></li>
+        <li><a href="https://www.behance.net/jessiedesouza" target="_blank" rel="noopener" style="--i:1">
+          <span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.3 11.6c.7-.3 1.1-.9 1.1-1.8 0-1.6-1.2-2.3-2.8-2.3H3.8v9h3.9c1.7 0 3.1-.8 3.1-2.6 0-1.1-.5-2-1.5-2.3zM5.6 9h1.7c.6 0 1.2.2 1.2.9s-.4 1-1.1 1H5.6V9zm1.9 6H5.6v-2.6h2c.8 0 1.3.4 1.3 1.3S8.3 15 7.5 15zM14.3 8.2h4.4v1.1h-4.4zM16.5 10.3c-2 0-3.3 1.4-3.3 3.3 0 2 1.2 3.3 3.3 3.3 1.5 0 2.6-.7 3-2.2h-1.6c-.2.5-.7.8-1.4.8-1 0-1.5-.6-1.5-1.5h4.6c.1-2.2-1-3.7-3.1-3.7zm-1.5 2.6c.1-.8.6-1.3 1.4-1.3s1.3.5 1.3 1.3H15z"/></svg></span>
+          Behance
+        </a></li>
+        <li><a href="https://www.instagram.com/jessicadeart/" target="_blank" rel="noopener" style="--i:2">
+          <span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="5" width="14" height="14" rx="4"/><circle cx="12" cy="12" r="3.2"/></g><circle cx="16" cy="8" r="1" fill="currentColor"/></svg></span>
+          Instagram
+        </a></li>
+        <li><a href="https://www.linkedin.com/in/jessica-souza-8985801b7/" target="_blank" rel="noopener" style="--i:3">
+          <span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.2 9.6h-2.6V18h2.6V9.6zM5.9 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM18.4 13.2c0-2.4-1.3-3.8-3.3-3.8-1.1 0-1.9.6-2.2 1.1V9.6h-2.5V18H13v-4.4c0-1.1.4-1.9 1.4-1.9s1.4.8 1.4 1.9V18h2.6v-4.8z"/></svg></span>
+          LinkedIn
+        </a></li>
+        <li><a href="mailto:jessicaluartedesigner@gmail.com" style="--i:4">
+          <span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="4.5" y="6.5" width="15" height="11" rx="1.5"/><path d="M5 7.5l7 5.5 7-5.5"/></g></svg></span>
+          E-mail
+        </a></li>
+        <li><a href="http://lattes.cnpq.br/9544430199440868" target="_blank" rel="noopener" style="--i:5">
+          <span class="icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 4.5a7.5 7.5 0 0 0-6.6 11.1L4.5 19.5l3.9-1A7.5 7.5 0 1 0 12 4.5z"/></svg></span>
+          Currículo Lattes
+        </a></li>
+      </ul>
+    </section>
+
+    <p class="rodape">© Jessica Deart</p>
+  </main>
+</body>
+</html>
