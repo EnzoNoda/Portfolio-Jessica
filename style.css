@@ -541,6 +541,7 @@ body.escuro .projetos-titulo img { filter: invert(1) hue-rotate(180deg) brightne
 }
 .projeto {
   display: block;
+  text-decoration: none;
   width: 100%;
   font: inherit;
   color: inherit;

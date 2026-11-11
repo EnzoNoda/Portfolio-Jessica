@@ -240,7 +240,7 @@ var textos = {
     filtrarProjetos: 'Filtrar projetos', fTodos: 'Todos', fCapa: 'Capa', fDiagramacao: 'Diagramação',
     fIdentidade: 'Identidade visual', fEmbalagem: 'Embalagem',
     semProjetos: 'Ainda não tem projetos nesta categoria.',
-    verBehance: 'Ver no Behance', fecharProjeto: 'Fechar projeto', abrirProjeto: 'Abrir projeto',
+    verBehance: 'Ver no Behance', fecharProjeto: 'Fechar projeto', abrirProjeto: 'Abrir no Behance (nova aba)',
     embedTexto: 'O projeto completo, com todas as imagens, está no Behance.',
     designerAlt: 'Designer gráfica, editorial, de identidade visual, de interface e de produto',
     altRetrato: 'Jessica de beca, sentada numa cadeira, segurando o canudo do diploma',
@@ -291,7 +291,7 @@ var textos = {
     filtrarProjetos: 'Filter projects', fTodos: 'All', fCapa: 'Cover', fDiagramacao: 'Typesetting',
     fIdentidade: 'Visual identity', fEmbalagem: 'Packaging',
     semProjetos: 'No projects in this category yet.',
-    verBehance: 'View on Behance', fecharProjeto: 'Close project', abrirProjeto: 'Open project',
+    verBehance: 'View on Behance', fecharProjeto: 'Close project', abrirProjeto: 'Open on Behance (new tab)',
     embedTexto: 'The full project, with all the images, is on Behance.',
     designerAlt: 'Editorial, brand, graphic, UI/UX and product designer',
     altRetrato: 'Jessica in her graduation gown, sitting on a chair, holding her diploma',
@@ -376,29 +376,29 @@ btnIdioma.addEventListener('click', function () {
              imagens empilhadas (como no Behance) em vez do embed.
 */
 var projetos = [
-  { id: '240092893', categoria: 'diagramacao', capa: 'imagens/projetos/spring-blossom.webp', imagens: [],
+  { id: '240092893', slug: 'Typesetting-Spring-Blossom-Editora-Viseu', categoria: 'diagramacao', capa: 'imagens/projetos/spring-blossom.webp', imagens: [],
     titulo: { pt: 'Diagramação “Spring Blossom”', en: 'Typesetting “Spring Blossom”' }, meta: '2025 | Editora Viseu' },
-  { id: '240026291', categoria: 'capa', capa: 'imagens/projetos/gatose.webp', imagens: [],
+  { id: '240026291', slug: 'Book-cover-Gatose-Editora-Viseu', categoria: 'capa', capa: 'imagens/projetos/gatose.webp', imagens: [],
     titulo: { pt: 'Capa “Gatose”', en: 'Book cover “Gatose”' }, meta: '2025 | Editora Viseu' },
-  { id: '238470329', categoria: 'capa', capa: 'imagens/projetos/antidotos.webp', imagens: [],
+  { id: '238470329', slug: 'Book-cover-Antidotos-Editora-Viseu', categoria: 'capa', capa: 'imagens/projetos/antidotos.webp', imagens: [],
     titulo: { pt: 'Capa “Antídotos”', en: 'Book cover “Antídotos”' }, meta: '2025 | Editora Viseu' },
-  { id: '237404435', categoria: 'capa', capa: 'imagens/projetos/amendoim-de-ouro.webp', imagens: [],
+  { id: '237404435', slug: 'Book-cover-Amendoim-de-ouro-Editora-Viseu', categoria: 'capa', capa: 'imagens/projetos/amendoim-de-ouro.webp', imagens: [],
     titulo: { pt: 'Capa “Amendoim de ouro”', en: 'Book cover “Amendoim de ouro”' }, meta: 'Editora Viseu' },
-  { id: '154465365', categoria: 'identidade', capa: 'imagens/projetos/engenium.webp', imagens: [],
+  { id: '154465365', slug: 'IDV-Engenium', categoria: 'identidade', capa: 'imagens/projetos/engenium.webp', imagens: [],
     titulo: { pt: 'Identidade visual “Engenium”', en: 'Visual identity “Engenium”' }, meta: 'Engenium' },
-  { id: '142513155', categoria: 'identidade', capa: 'imagens/projetos/attini-cross.webp', imagens: [],
+  { id: '142513155', slug: 'Identidade-Visual-Attini-Cross', categoria: 'identidade', capa: 'imagens/projetos/attini-cross.webp', imagens: [],
     titulo: { pt: 'Identidade visual “Attini Cross”', en: 'Visual identity “Attini Cross”' }, meta: 'Attini Cross' },
-  { id: '142513831', categoria: 'identidade', capa: 'imagens/projetos/shop-maais.webp', imagens: [],
+  { id: '142513831', slug: 'IDV-Shop-Maais', categoria: 'identidade', capa: 'imagens/projetos/shop-maais.webp', imagens: [],
     titulo: { pt: 'Identidade visual “Shop Maais”', en: 'Visual identity “Shop Maais”' }, meta: 'Shop Maais' },
-  { id: '133408155', categoria: 'identidade', capa: 'imagens/projetos/luigi-di-martino.webp', imagens: [],
+  { id: '133408155', slug: 'Identidade-Visual-Luigi-Di-Martino', categoria: 'identidade', capa: 'imagens/projetos/luigi-di-martino.webp', imagens: [],
     titulo: { pt: 'Identidade visual “Luigi Di Martino”', en: 'Visual identity “Luigi Di Martino”' }, meta: 'Luigi Di Martino' },
-  { id: '133229689', categoria: 'identidade', capa: 'imagens/projetos/cicloscience.webp', imagens: [],
+  { id: '133229689', slug: 'Identidade-Visual-CicloScience', categoria: 'identidade', capa: 'imagens/projetos/cicloscience.webp', imagens: [],
     titulo: { pt: 'Identidade visual “CicloScience”', en: 'Visual identity “CicloScience”' }, meta: 'CicloScience' },
-  { id: '133403151', categoria: 'identidade', capa: 'imagens/projetos/nucleo-noroeste.webp', imagens: [],
+  { id: '133403151', slug: 'Identidade-Visual-Nucleo-Noroeste', categoria: 'identidade', capa: 'imagens/projetos/nucleo-noroeste.webp', imagens: [],
     titulo: { pt: 'Identidade visual “Núcleo Noroeste”', en: 'Visual identity “Núcleo Noroeste”' }, meta: 'Núcleo Noroeste' },
-  { id: '124418863', categoria: 'identidade', capa: 'imagens/projetos/gecor.webp', imagens: [],
+  { id: '124418863', slug: 'Identidade-Visual-GECor', categoria: 'identidade', capa: 'imagens/projetos/gecor.webp', imagens: [],
     titulo: { pt: 'Identidade visual “GECor”', en: 'Visual identity “GECor”' }, meta: 'GECor' },
-  { id: '184099129', categoria: 'embalagem', capa: 'imagens/projetos/sitio-eliza.webp', imagens: [],
+  { id: '184099129', slug: 'Embalagem-Sitio-Eliza-Cafes-Especiais', categoria: 'embalagem', capa: 'imagens/projetos/sitio-eliza.webp', imagens: [],
     titulo: { pt: 'Embalagem “Sítio Eliza Cafés Especiais”', en: 'Packaging “Sítio Eliza Cafés Especiais”' }, meta: 'Sítio Eliza Cafés Especiais' }
 ];
 
@@ -407,7 +407,8 @@ var gradeProjetos = document.getElementById('grade-projetos');
 var semProjetos = document.getElementById('sem-projetos');
 
 function urlEmbed(id) { return 'https://www.behance.net/embed/project/' + id + '?ilo0=1'; }
-function urlBehance(id) { return 'https://www.behance.net/gallery/' + id; }
+/* o Behance precisa do nome do projeto depois do número (gallery/ID/Nome) */
+function urlBehance(id, slug) { return 'https://www.behance.net/gallery/' + id + '/' + (slug || 'projeto'); }
 
 function iframeBehance(id, titulo) {
   var f = document.createElement('iframe');
@@ -433,8 +434,11 @@ function renderProjetos() {
   gradeProjetos.innerHTML = '';
   projetos.forEach(function (p, i) {
     var titulo = p.titulo[idioma] || p.titulo.pt;
-    var card = document.createElement('button');
-    card.type = 'button';
+    // o card abre o projeto direto no Behance, em uma nova aba
+    var card = document.createElement('a');
+    card.href = urlBehance(p.id, p.slug);
+    card.target = '_blank';
+    card.rel = 'noopener';
     card.className = 'projeto';
     card.dataset.categoria = p.categoria;
     card.dataset.indice = i;
@@ -457,7 +461,6 @@ function renderProjetos() {
     var h = document.createElement('h3'); h.textContent = titulo;
     var m = document.createElement('p'); m.textContent = p.meta || '';
     card.appendChild(capa); card.appendChild(h); card.appendChild(m);
-    card.addEventListener('click', function () { abrirModalProjeto(i, card); });
     gradeProjetos.appendChild(card);
   });
   aplicarFiltro(filtroAtual);
@@ -497,7 +500,7 @@ function abrirModalProjeto(i, origem) {
   origemModal = origem || null;
   document.getElementById('pmodal-titulo').textContent = titulo;
   document.getElementById('pmodal-meta').textContent = p.meta || '';
-  document.getElementById('pmodal-behance').href = urlBehance(p.id);
+  document.getElementById('pmodal-behance').href = urlBehance(p.id, p.slug);
   document.querySelector('#pmodal-behance span').textContent = textos[idioma].verBehance;
 
   pmodalCorpo.innerHTML = '';
