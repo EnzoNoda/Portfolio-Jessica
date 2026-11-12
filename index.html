@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=18">
+  <link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
 
@@ -39,7 +39,8 @@
         <svg class="sol" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></svg>
       </button>
       <button class="icone btn-menu" id="btn-menu" aria-label="Abrir menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14M5 16h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="ico-abrir" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>
+        <svg class="ico-fechar" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>
       </button>
     </div>
   </header>
@@ -54,7 +55,7 @@
         </p>
 
         <h1 class="titulo-gif">
-          <img src="imagens/designer-pt.webp" alt="Designer gráfica, editorial, de identidade visual, de interface e de produto" data-src-pt="imagens/designer-pt.webp" data-src-en="imagens/designer-en.webp" data-i18n-alt="designerAlt">
+          <img src="imagens/designer-pt.webp" alt="Designer gráfica, editorial, de identidade visual, de interface e de produto" data-src-pt="imagens/designer-pt.webp" data-src-en="imagens/designer-en.webp" data-src-pt-escuro="imagens/designer-pt-escuro.webp" data-src-en-escuro="imagens/designer-en-escuro.webp" data-i18n-alt="designerAlt">
         </h1>
 
         <p class="frase" data-i18n-html="frase">
@@ -86,6 +87,10 @@
       <a href="#" data-pagina="redes" data-i18n="redes">Redes Sociais</a>
       <a href="#" data-pagina="contato" data-i18n="faleComigo">Fale comigo</a>
     </nav>
+    <div class="menu-acoes">
+      <button type="button" class="menu-acao" id="menu-idioma">English</button>
+      <button type="button" class="menu-acao" id="menu-tema">Modo escuro</button>
+    </div>
   </div>
 
   <!-- ========== PÁGINAS (abrem com o círculo) ========== -->
@@ -100,7 +105,7 @@
           </figure>
           <div class="sobre-intro">
             <h2 class="sobre-titulo" id="t-sobre" tabindex="-1">
-              <img src="imagens/sobre/ola-jessica-pt.webp" data-src-pt="imagens/sobre/ola-jessica-pt.webp" data-src-en="imagens/sobre/ola-jessica-en.webp" width="582" height="168" alt="Olá, eu sou a Jessica: designer, mestranda e pesquisadora" data-i18n-alt="altOla">
+              <img src="imagens/sobre/ola-jessica-pt.webp" data-src-pt="imagens/sobre/ola-jessica-pt.webp" data-src-en="imagens/sobre/ola-jessica-en.webp" data-src-pt-escuro="imagens/sobre/ola-jessica-pt-escuro.webp" data-src-en-escuro="imagens/sobre/ola-jessica-en-escuro.webp" width="582" height="168" alt="Olá, eu sou a Jessica: designer, mestranda e pesquisadora" data-i18n-alt="altOla">
             </h2>
             <p class="sobre-texto" data-i18n-html="sobreP1">Sou <em>bacharel</em> em design pela Universidade Estadual de Maringá - <em>UEM</em></p>
             <figure class="foto foto-formatura">
@@ -170,7 +175,7 @@
         </section>
 
         <footer class="sobre-fim revela">
-          <img src="imagens/sobre/mais-do-que-2.webp" data-src-pt="imagens/sobre/mais-do-que-2.webp" data-src-en="imagens/sobre/mais-do-que-en.webp" width="1118" height="111" loading="lazy" alt="Mais do que experiências, repertório para criar o novo" data-i18n-alt="altMaisDoQue">
+          <img src="imagens/sobre/mais-do-que-2.webp" data-src-pt="imagens/sobre/mais-do-que-2.webp" data-src-en="imagens/sobre/mais-do-que-en.webp" data-src-pt-escuro="imagens/sobre/mais-do-que-2-escuro.webp" data-src-en-escuro="imagens/sobre/mais-do-que-en-escuro.webp" width="1118" height="111" loading="lazy" alt="Mais do que experiências, repertório para criar o novo" data-i18n-alt="altMaisDoQue">
         </footer>
 
       </div>
@@ -178,11 +183,11 @@
   </section>
 
   <section class="pagina" id="pagina-projetos" aria-labelledby="t-projetos" inert>
-    <div class="pagina-miolo projetos-miolo">
-      <div class="pagina-conteudo projetos-rolagem">
+    <div class="pagina-miolo sobre-miolo projetos-miolo" data-rolagem>
+      <div class="projetos-rolagem">
         <header class="projetos-topo">
           <h2 class="projetos-titulo" id="t-projetos" tabindex="-1">
-            <img src="imagens/projetos-pt.webp" alt="Projetos" data-src-pt="imagens/projetos-pt.webp" data-src-en="imagens/projetos-en.webp" data-i18n-alt="tProj1">
+            <img src="imagens/projetos-pt.webp" alt="Projetos" data-src-pt="imagens/projetos-pt.webp" data-src-en="imagens/projetos-en.webp" data-src-pt-escuro="imagens/projetos-pt-escuro.webp" data-src-en-escuro="imagens/projetos-en-escuro.webp" data-i18n-alt="tProj1">
           </h2>
           <p class="projetos-sub" data-i18n-html="projetosSub">Onde <em>ideias</em> se tornam <em>realidade</em>!</p>
         </header>
@@ -206,11 +211,10 @@
     <div class="pagina-miolo sobre-miolo cv-miolo" data-rolagem>
       <div class="cv">
         <header class="cv-topo">
-          <h2 class="pagina-titulo" id="t-curriculo" tabindex="-1"><span data-i18n="tCurr1">Currículo</span> <em data-i18n="tCurr2">trajetória</em></h2>
+          <h2 class="cv-titulo" id="t-curriculo" tabindex="-1"><img src="imagens/curriculo-pt.webp" width="657" height="243" alt="Currículo de Jessica Souza" data-i18n-alt="altCurriculo" data-src-pt="imagens/curriculo-pt.webp" data-src-en="imagens/curriculo-en.webp" data-src-pt-escuro="imagens/curriculo-pt-escuro.webp" data-src-en-escuro="imagens/curriculo-en-escuro.webp"></h2>
           <div class="cv-id">
             <div>
-              <p class="cv-nome">Jessica Souza</p>
-              <p class="cv-cargo" data-i18n="cvCargo">Designer Gráfica e Editorial · Branding e Identidade Visual · UX/UI Design</p>
+              <p class="cv-cargo" data-i18n="cvCargo">Designer Gráfico e Editorial · Branding e Identidade Visual · UX/UI Design</p>
               <p class="cv-local">Maringá – PR</p>
             </div>
             <a class="cv-baixar" href="jessica-souza-curriculo.pdf" target="_blank" rel="noopener">
@@ -229,29 +233,16 @@
     <div class="pagina-miolo redes-miolo">
       <div class="redes">
         <h2 class="redes-titulo" id="t-redes" tabindex="-1">
-          <img src="imagens/me-encontre-pt.webp" data-src-pt="imagens/me-encontre-pt.webp" data-src-en="imagens/me-encontre-en.webp" alt="Me encontre nas redes" data-i18n-alt="meEncontre">
+          <!-- computador: GIF com a mãozinha / celular: só o texto -->
+          <img class="so-desktop" src="imagens/me-encontre-pt.webp" data-src-pt="imagens/me-encontre-pt.webp" data-src-en="imagens/me-encontre-en.webp" alt="Me encontre nas redes" data-i18n-alt="meEncontre">
+          <img class="so-mobile" src="imagens/me-encontre-pt-2.webp" data-src-pt="imagens/me-encontre-pt-2.webp" data-src-en="imagens/me-encontre-en-2.webp" alt="" aria-hidden="true">
         </h2>
         <ul class="redes-lista">
-          <li><a href="https://www.linkedin.com/in/jessica-souza-8985801b7/" target="_blank" rel="noopener">
-            <span class="rede-icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.2 9.6h-2.6V18h2.6V9.6zM5.9 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM18.4 13.2c0-2.4-1.3-3.8-3.3-3.8-1.1 0-1.9.6-2.2 1.1V9.6h-2.5V18H13v-4.4c0-1.1.4-1.9 1.4-1.9s1.4.8 1.4 1.9V18h2.6v-4.8z"/></svg></span>
-            <span class="rede-texto"><span class="sr-only">LinkedIn: </span>https://www.linkedin.com/in/jessica-souza-8985801b7/</span>
-          </a></li>
-          <li><a href="https://www.behance.net/jessiedesouza" target="_blank" rel="noopener">
-            <span class="rede-icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.3 11.6c.7-.3 1.1-.9 1.1-1.8 0-1.6-1.2-2.3-2.8-2.3H3.8v9h3.9c1.7 0 3.1-.8 3.1-2.6 0-1.1-.5-2-1.5-2.3zM5.6 9h1.7c.6 0 1.2.2 1.2.9s-.4 1-1.1 1H5.6V9zm1.9 6H5.6v-2.6h2c.8 0 1.3.4 1.3 1.3S8.3 15 7.5 15zM14.3 8.2h4.4v1.1h-4.4zM16.5 10.3c-2 0-3.3 1.4-3.3 3.3 0 2 1.2 3.3 3.3 3.3 1.5 0 2.6-.7 3-2.2h-1.6c-.2.5-.7.8-1.4.8-1 0-1.5-.6-1.5-1.5h4.6c.1-2.2-1-3.7-3.1-3.7zm-1.5 2.6c.1-.8.6-1.3 1.4-1.3s1.3.5 1.3 1.3H15z"/></svg></span>
-            <span class="rede-texto"><span class="sr-only">Behance: </span>https://www.behance.net/jessiedesouza</span>
-          </a></li>
-          <li><a href="https://www.instagram.com/jessicadeart/" target="_blank" rel="noopener">
-            <span class="rede-icone"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="5" width="14" height="14" rx="4"/><circle cx="12" cy="12" r="3.2"/></g><circle cx="16" cy="8" r="1" fill="currentColor"/></svg></span>
-            <span class="rede-texto"><span class="sr-only">Instagram: </span>https://www.instagram.com/jessicadeart/</span>
-          </a></li>
-          <li><a href="mailto:jessicaluartedesigner@gmail.com">
-            <span class="rede-icone"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="4.5" y="6.5" width="15" height="11" rx="1.5"/><path d="M5 7.5l7 5.5 7-5.5"/></g></svg></span>
-            <span class="rede-texto"><span class="sr-only">Email: </span>jessicaluartedesigner@gmail.com</span>
-          </a></li>
-          <li><a href="http://lattes.cnpq.br/9544430199440868" target="_blank" rel="noopener">
-            <span class="rede-icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 4.5a7.5 7.5 0 0 0-6.6 11.1L4.5 19.5l3.9-1A7.5 7.5 0 1 0 12 4.5z"/><circle cx="10.2" cy="11" r="1.5" style="fill:var(--icone-fundo)"/><path d="M9.5 14.3c1.4 1 3.5 1 4.9-.3" style="fill:none;stroke:var(--icone-fundo)" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-            <span class="rede-texto"><span class="sr-only">Currículo Lattes: </span>http://lattes.cnpq.br/9544430199440868</span>
-          </a></li>
+          <li><a href="https://www.behance.net/jessiedesouza" target="_blank" rel="noopener">Behance</a></li>
+          <li><a href="https://www.instagram.com/jessicadeart/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://www.linkedin.com/in/jessica-souza-8985801b7/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="mailto:jessicaluartedesigner@gmail.com">E-mail</a></li>
+          <li><a href="http://lattes.cnpq.br/9544430199440868" target="_blank" rel="noopener" data-i18n="lattes">Currículo Lattes</a></li>
         </ul>
       </div>
     </div>
@@ -305,7 +296,7 @@
 
       <section class="servicos" aria-labelledby="t-servicos">
         <h3 class="servicos-titulo" id="t-servicos">
-          <img src="imagens/servicos-pt.webp" width="514" height="168" alt="Serviços" data-src-pt="imagens/servicos-pt.webp" data-src-en="imagens/servicos-en.webp" data-i18n-alt="servicos">
+          <img src="imagens/servicos-pt.webp" width="514" height="168" alt="Serviços" data-src-pt="imagens/servicos-pt.webp" data-src-en="imagens/servicos-en.webp" data-src-pt-escuro="imagens/servicos-pt-escuro.webp" data-src-en-escuro="imagens/servicos-en-escuro.webp" data-i18n-alt="servicos">
         </h3>
         <ul class="servicos-lista">
             <li data-i18n="svCapas">Criação de capas</li>
@@ -342,6 +333,6 @@
     </article>
   </div>
 
-  <script src="script.js?v=19"></script>
+  <script src="script.js?v=21"></script>
 </body>
 </html>

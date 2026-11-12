@@ -41,6 +41,8 @@ function marcarAtivo(nome) {
     l.classList.toggle('ativo', ativo);
     if (ativo) l.setAttribute('aria-current', 'page'); else l.removeAttribute('aria-current');
   });
+  var contato = document.querySelector('.btn-contato');
+  if (contato) contato.classList.toggle('ativo', nome === 'contato');
 }
 
 /* Anima o recorte em círculo pelo JavaScript (funciona igual no Safari e no Chrome) */
@@ -203,8 +205,21 @@ var btnTema = document.getElementById('btn-tema');
 function guardar(chave, valor) { try { localStorage.setItem(chave, valor); } catch (e) {} }
 function ler(chave) { try { return localStorage.getItem(chave); } catch (e) { return null; } }
 
+/* escolhe a versão de cada imagem conforme o idioma e o tema (data-src-pt, data-src-en-escuro…) */
+function atualizarImagens() {
+  var escuro = document.body.classList.contains('escuro');
+  var lang = typeof idioma === 'string' ? idioma : 'pt';
+  document.querySelectorAll('[data-src-pt]').forEach(function (el) {
+    var nome = 'data-src-' + lang;
+    if (escuro && el.hasAttribute(nome + '-escuro')) nome += '-escuro';
+    var v = el.getAttribute(nome);
+    if (v && el.getAttribute('src') !== v) el.setAttribute('src', v);
+  });
+}
+
 function aplicarTema(escuro) {
   document.body.classList.toggle('escuro', escuro);
+  atualizarImagens();
   document.querySelectorAll('[data-src-escuro]').forEach(function (img) {
     var v = img.getAttribute(escuro ? 'data-src-escuro' : 'data-src-claro');
     if (v && img.getAttribute('src') !== v) img.setAttribute('src', v);
@@ -212,6 +227,8 @@ function aplicarTema(escuro) {
   var t = textos[idioma];
   btnTema.setAttribute('aria-label', escuro ? t.temaClaro : t.temaEscuro);
   btnTema.title = escuro ? t.temaClaro : t.temaEscuro;
+  var mt = document.getElementById('menu-tema');
+  if (mt) mt.textContent = escuro ? t.menuClaro : t.menuEscuro;
 }
 btnTema.addEventListener('click', function () {
   var escuro = !document.body.classList.contains('escuro');
@@ -261,7 +278,7 @@ var textos = {
     capMestrado: 'Apresentação final da disciplina - Mestrado',
     metaMestrado1: '2026 | Metodologia de Projeto de Pesquisa', metaMestrado2: '2026 | Design Centrado no Usuário',
     meEncontre: 'Me encontre nas redes',
-    cvCargo: 'Designer Gráfica e Editorial · Branding e Identidade Visual · UX/UI Design', cvBaixar: 'Ver currículo em PDF', verCertificado: 'Ver certificado', abrirImagem: 'Abrir em nova aba',
+    cvCargo: 'Designer Gráfico e Editorial · Branding e Identidade Visual · UX/UI Design', cvBaixar: 'Ver currículo em PDF', altCurriculo: 'Currículo de Jessica Souza', menuEscuro: 'Modo escuro', menuClaro: 'Modo claro', lattes: 'Currículo Lattes', verCertificado: 'Ver certificado', abrirImagem: 'Abrir em nova aba',
     servicos: 'Serviços', svCapas: 'Criação de capas', svCartazes: 'Cartazes e flyers', svLogotipos: 'Logotipos',
     svDiagramacao: 'Diagramação de livros, revistas e catálogos', svApresentacoes: 'Apresentações institucionais', svIdentidade: 'Identidade visual', vamosConversar: 'Vamos conversar?', cliqueCopiar: 'Clique para copiar!', copiado: 'Email copiado!',
     formTitulo: 'Ou escreva uma mensagem abaixo', nome: 'Nome', mensagem: 'Mensagem',
@@ -312,7 +329,7 @@ var textos = {
     capMestrado: "Final course presentation - Master's",
     metaMestrado1: '2026 | Research Project Methodology', metaMestrado2: '2026 | User-Centered Design',
     meEncontre: 'Find me on social media',
-    cvCargo: 'Graphic & Editorial Designer · Branding & Visual Identity · UX/UI Design', cvBaixar: 'View resume as PDF', verCertificado: 'View certificate', abrirImagem: 'Open in new tab',
+    cvCargo: 'Graphic & Editorial Designer · Branding & Visual Identity · UX/UI Design', cvBaixar: 'View resume as PDF', altCurriculo: 'Resume of Jessica Souza', menuEscuro: 'Dark mode', menuClaro: 'Light mode', lattes: 'Lattes CV', verCertificado: 'View certificate', abrirImagem: 'Open in new tab',
     servicos: 'Services', svCapas: 'Book cover design', svCartazes: 'Posters and flyers', svLogotipos: 'Logos',
     svDiagramacao: 'Layout for books, magazines and catalogs', svApresentacoes: 'Corporate presentations', svIdentidade: 'Visual identity', vamosConversar: "Let's talk?", cliqueCopiar: 'Click to copy!', copiado: 'Email copied!',
     formTitulo: 'Or write a message below', nome: 'Name', mensagem: 'Message',
@@ -349,14 +366,13 @@ function aplicarIdioma(novo) {
   document.querySelectorAll('[data-i18n-alt]').forEach(function (el) {
     var v = t[el.dataset.i18nAlt]; if (v) el.setAttribute('alt', v);
   });
-  document.querySelectorAll('[data-src-pt]').forEach(function (el) {
-    var v = el.getAttribute('data-src-' + novo); if (v && el.getAttribute('src') !== v) el.setAttribute('src', v);
-  });
+  atualizarImagens();
   if (typeof renderProjetos === 'function') renderProjetos();
   if (typeof renderCurriculo === 'function') renderCurriculo();
   document.getElementById('sigla-idioma').textContent = t.siglaOutro;
   btnIdioma.setAttribute('aria-label', t.trocarIdioma);
   btnIdioma.title = t.tituloIdioma;
+  document.getElementById('menu-idioma').textContent = t.tituloIdioma;
   btnMenu.setAttribute('aria-label', menu.classList.contains('aberto') ? t.fecharMenu : t.abrirMenu);
   aplicarTema(document.body.classList.contains('escuro'));
 }
@@ -573,10 +589,10 @@ renderProjetos();
 /* Conteúdo do currículo (PDF de novembro/2026). Para editar, mude os textos abaixo. */
 var curriculo = {
   pt: {
-    resumo: 'Designer gráfica bacharel em Design pela Universidade Estadual de Maringá (UEM), com experiência em design editorial, diagramação, criação de capas, ilustração, identidade visual e branding. Atua como designer gráfica na Editora Viseu, desenvolvendo projetos gráficos de livros, fechamento de arquivos para impressão e materiais de divulgação para lançamentos. Experiência anterior em estágios de branding e design gráfico, com criação de logotipos, layouts de sites e conteúdo para redes sociais, além de liderança de equipes em empresa júnior. Mestranda em Design e Interfaces (UEM) e em formação contínua em UX/UI Design.',
+    resumo: 'Designer gráfico, bacharel em Design pela Universidade Estadual de Maringá (UEM), com experiência em design editorial, diagramação, criação de capas, ilustração, identidade visual e branding. Atua como designer gráfico na Editora Viseu, desenvolvendo projetos gráficos de livros, fechamento de arquivos para impressão e materiais de divulgação para lançamentos. Experiência anterior em estágios de branding e design gráfico, com criação de logotipos, layouts de sites e conteúdo para redes sociais, além de liderança de equipes em empresa júnior. Mestranda em Design e Interfaces (UEM) e em formação contínua em UX/UI Design.',
     titulos: { exp: 'experiência profissional', acad: 'experiência acadêmica', form: 'formação', comp: 'competências', idiomas: 'idiomas', cert: 'certificações e cursos', areas: 'Áreas', ferramentas: 'Ferramentas' },
     experiencia: [
-      { cargo: 'Designer Gráfica', local: 'Editora Viseu', data: 'Julho de 2024 – Atual', atual: true, itens: [
+      { cargo: 'Designer Gráfico', local: 'Editora Viseu', data: 'Julho de 2024 – Atual', atual: true, itens: [
         'Diagramação e projeto gráfico de livros no Adobe InDesign, garantindo consistência tipográfica e padrão editorial.',
         'Criação de capas, ilustrações, tabelas e elementos gráficos alinhados ao gênero e ao público de cada obra.',
         'Tratamento e edição de imagens no Adobe Photoshop.',
@@ -809,6 +825,10 @@ if (form) {
     c.addEventListener('input', function () { c.classList.remove('erro'); });
   });
 }
+
+/* idioma e tema também no menu do celular */
+document.getElementById('menu-idioma').addEventListener('click', function () { btnIdioma.click(); });
+document.getElementById('menu-tema').addEventListener('click', function () { btnTema.click(); });
 
 /* preferências salvas */
 if (ler('idioma') === 'en') aplicarIdioma('en');
