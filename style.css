@@ -426,9 +426,9 @@ body.escuro .hero-foto img {
 .pagina.aberta .sobre-hero { animation: subir .8s var(--ease) .3s both; }
 
 /* ---------- Currículo (página com rolagem) ---------- */
-.cv { max-width: 1200px; margin: 0 auto; }
+.cv { max-width: 1680px; margin: 0 auto; }  /* mesma largura do Sobre e Projetos: alinha com o logo */
 .cv-titulo { outline: none; margin-bottom: clamp(16px, 3vh, 28px); }
-.cv-titulo img { width: min(100%, clamp(280px, 30vw, 520px)); height: auto; margin-left: -4px; }
+.cv-titulo img { width: min(100%, clamp(240px, 20vw, 360px)); height: auto; margin-left: -4px; }
 .cv-id { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
 .cv-nome { font-size: clamp(20px, 2vw, 26px); font-weight: 800; }
 .cv-cargo { font-size: 14px; font-weight: 700; color: var(--texto); margin-top: 4px; }
@@ -708,9 +708,10 @@ body.escuro .hero-foto img {
 .redes-miolo { justify-content: center; max-width: none; }
 .redes {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 560px) minmax(0, 460px);
+  justify-content: center;   /* título e botões centralizados na tela */
   align-items: center;
-  gap: clamp(32px, 6vw, 96px);
+  gap: clamp(40px, 7vw, 120px);
   animation: subir .8s var(--ease) .3s both;
 }
 .pagina:not(.aberta) .redes { animation: none; }
@@ -980,11 +981,11 @@ body.menu-aberto .logo img { filter: brightness(0) invert(.95); }
   .servicos { padding-top: 56px; padding-bottom: 24px; }
   .servicos-lista { grid-template-columns: 1fr; gap: 12px; }
   .redes-miolo { justify-content: flex-start; overflow-y: auto; }
-  .redes { grid-template-columns: 1fr; gap: 28px; }
+  .redes { grid-template-columns: 1fr; gap: 28px; margin-block: auto; }  /* centraliza na vertical; se não couber, começa do topo */
   .redes-titulo img { width: min(100%, 300px); }
   .redes-titulo .so-desktop { display: none; }
   .redes-titulo .so-mobile { display: block; }
-  .redes-lista { gap: 14px; width: 100%; }
+  .redes-lista { gap: 22px; width: 100%; }
   .redes-lista a { font-size: 15px; min-height: 54px; }
   .contato-titulo img { width: min(100%, 340px); }
   .copiar { display: inline-flex; flex-direction: column; align-items: center; margin-top: 24px; gap: 10px; }
